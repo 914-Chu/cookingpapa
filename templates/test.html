@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CRUD TEST</title>
+    </head>    
+    <body>
+        <center>
+            <table>
+                <thead>
+                    <tr>
+                        <th>userId</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>pwd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in datas %}
+                    <tr>
+                      <td>{{item[0]}}</td> 
+                      <td>{{item[1]}}</td>  
+                      <td>{{item[2]}}</td> 
+                      <td>{{item[3]}}</td>  
+                    </tr>    
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+        </center>
+    </body>
+</html>
