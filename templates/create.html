@@ -14,27 +14,19 @@
                 <input type="text" name="firstName" id="firstName" required>
                 <label for="LastName">Last Name:</label>
                 <input type="text" name="lastName" id="lastName" required>
-                <div class="msg">{{msg}}</div>
+                <label for="pwd">Password:</label>
+                <input type="text" name="pwd" id="pwd" required>
                 <input type="submit" value="Create">
             </form>  
-            <table>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in data %}
-                    <tr>
-                      <td>{{item[1]}}</td> 
-                      <td>{{item[2]}}</td>  
-                    </tr>    
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
-        
+        <div class="url">
+            <a href="{{url_for('index')}}">INDEX</a>
+            <a href="{{url_for('read')}}">READ</a>
+            <!-- TODO:DELETE -->
+        </div>
+        {% if msg %}
+        <div class="msg">{{msg}}</div>
+        {% endif %}
         </center>
     </body>
 </html>
