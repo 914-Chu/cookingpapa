@@ -7,22 +7,19 @@
     </head>    
     <body>
         <center>
-        <div class="CREATE">
-            <h2>CREATE</h2>
+        <div class="LOGIN">
+            <h2>LOGIN</h2>
             <form method="post">
-                <label for="firstName">First Name:</label>
-                <input type="text" name="firstName" id="firstName" required>
-                <label for="LastName">Last Name:</label>
-                <input type="text" name="lastName" id="lastName" required>
+                <label for="firstName">User Name:</label>
+                <input type="text" name="userName" id="userName" required>
                 <label for="pwd">Password:</label>
                 <input type="text" name="pwd" id="pwd" required>
-                <input type="submit" value="Create">
+                <input type="submit" value="Login">
             </form>  
         </div>
         <div class="url">
             <a href="{{url_for('index')}}">INDEX</a>
-            <a href="{{url_for('read')}}">READ</a>
-            <!-- TODO:DELETE -->
+            <a href="{{url_for('register')}}">REGISTER</a>
         </div>
         {% if msg %}
         <div class="msg">{{msg}}</div>

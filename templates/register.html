@@ -7,24 +7,20 @@
     </head>    
     <body>
         <center>
-        <div class="UPDATE">
-            <h2>UPDATE</h2>
-            {% if userId %}
-            <h3>userId:{{userId}}</h3>
-            {% endif %}
+        <div class="REGISTER">
+            <h2>REGISTER</h2>
             <form method="post">
                 <label for="userName">User Name:</label>
                 <input type="text" name="userName" id="userName" required>
                 <label for="pwd">Password:</label>
                 <input type="text" name="pwd" id="pwd" required>
-                <input type="submit" value="Update">
+                <input type="submit" value="Register">
             </form>  
         </div>
         <div class="url">
             <a href="{{url_for('index')}}">INDEX</a>
-            <a href="{{url_for('register')}}">REGISTER</a>
+            <a href="{{url_for('login')}}">LOGIN</a>
             <a href="{{url_for('read')}}">READ</a>
-            <!-- TODO:DELETE -->
         </div>
         {% if msg %}
         <div class="msg">{{msg}}</div>

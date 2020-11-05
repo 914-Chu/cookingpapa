@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<HTML lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>CRUD TEST</title>
+    </head>
+    <body>
+        <center>
+        <h2>HOME</h2>
+        {% if userName %}
+        <h3>USER NAME: {{userName}}</h3>
+        {% endif %}
+        <div>
+            <a href="{{url_for('pantry')}}">PANTRY</a>
+            <a href="{{url_for('logout')}}">LOGOUT</a>
+        </div>
+        </center>
+    </body>
+</HTML>
