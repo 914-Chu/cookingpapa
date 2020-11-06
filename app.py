@@ -113,6 +113,10 @@ def pantry():
 @app.route("/login/pantry/add", methods=['GET', 'POST'])
 def pantryadd():
     msg = ''
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT name FROM Ingredient")
+    ings=[item['name'] for item in cursor.fetchall()]
+
     if 'loggedin' in session:
         if request.method == 'POST' and 'ingName1' in request.form and 'qty1' in request.form  and 'unit1' in request.form  and 'pdate1' in request.form  and 'edate1' in request.form:
             ingName = ''
@@ -120,9 +124,11 @@ def pantryadd():
             unit = ''
             pdate = ''
             edate = ''
+            invalid=[]
             uId = str(session['userId'])
             
-            cursor = mysql.connection.cursor()
+            # cursor = mysql.connection.cursor()
+            # cursor.execute()
             #print(request.form)
             for i in range(1, (len(request.form)//5)+1):
                 
@@ -152,12 +158,22 @@ def pantryadd():
                     mysql.connection.commit()
                     msg = 'INSERT SUCCESS!'
                 else:
-                    msg = 'INVALID INGREDIENT!'
+                    invalid.append(ingName)
+
+            if len(invalid) > 0:
+                for item in invalid:
+                    msg += item + ', ' 
+                
+                msg = msg[0:len(msg)-2]
+                if len(invalid) == 1:
+                    msg += ' IS AN INVALID INGREDIENT!'   
+                else:
+                    msg += ' ARE INVALID INGREDIENTS!'   
 
         elif request.method == 'POST':
             msg = 'EMTPY ENTRY'
         
-        return render_template("pantryadd.html", msg=msg)
+        return render_template("pantryadd.html", msg=msg, ings=ings)
     else:
         return redirect(url_for('login'))
 
@@ -306,12 +322,12 @@ def delete(userId):
         msg = 'NO USERID'
     
     return render_template("delete.html", msg=msg, account=account)
-
+'''
 #live-search
 @app.route("/live-search-box")
 def live_search_box():
     return render_template("pantryadd.html")
-
+'''
 @app.route("/live-search",methods=["GET","POST"])
 def live_search():
     searchbox = request.form.get("text")
