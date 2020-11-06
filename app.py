@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 #from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-from flask import jsonify
-
-
+import json
+import datetime
 
 app = Flask(__name__)
 app.secret_key = 'cookingpapa'
@@ -16,18 +15,6 @@ app.config['MYSQL_DB'] = 'cookingpapaDB'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
-
-#datas = [] 
-# @app.route("/home", methods=['GET','POST'])
-# def crud():
-    
-#     cursor = mysql.connection.cursor()
-#     cursor.execute("SELECT * FROM userAccount")
-#     datas = cursor.fetchall()
-#     print(datas)
-
-#     #return datas[0]
-#     return render_template("test.html", output=datas)
 
 @app.route("/index")
 def index():
@@ -54,7 +41,9 @@ def register():
             msg = 'INVALID PASSWORD WITH SPACE'
         else:
             #auto increment adjustment
-            count = str(cursor.execute("SELECT COUNT(userId) FROM userAccount"))
+            cursor.execute("SELECT COUNT(userId) AS cnt FROM userAccount")
+            res = cursor.fetchone()
+            count = res['cnt']
             if count == 0:
                 cursor.execute("ALTER TABLE userAccount AUTO_INCREMENT = 1")
                 mysql.connection.commit()
@@ -112,7 +101,7 @@ def pantry():
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         # query = "ALTER TABLE userAccount AUTO_INCREMENT = {}".format(lastId)
-        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate 
+        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
                           FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                           WHERE Pantry.userId = {}""".format(session['userId'])
         cursor.execute(query)
@@ -145,11 +134,25 @@ def pantryadd():
                 edate = request.form['edate{}'.format(i)]
 
                 cursor.execute("SELECT ingId FROM Ingredient WHERE name = %s", (ingName,))
-                ingId = str(cursor.fetchone()['ingId'])
+                res = cursor.fetchone()
+                # print(bool(cursor.fetchone()))
+                # #ingId = str(cursor.fetchone()['ingId'])
+                # #ingId=NULL
+                # print(type(ingId))
+                if bool(res):
+                    ingId = res['ingId']
+                    cursor.execute("SELECT COUNT(pantryId) AS cnt FROM Pantry")
+                    res = cursor.fetchone()
+                    count = res['cnt']
+                    if count == 0:
+                        cursor.execute("ALTER TABLE Pantry AUTO_INCREMENT = 1")
+                        mysql.connection.commit()
 
-                cursor.execute("INSERT INTO Pantry (pantryId, ingId, userId, qty, unit, purchDate, expDate) VALUES(NULL, %s, %s, %s, %s, %s, %s)", (ingId, uId, qty, unit, pdate, edate))
-                mysql.connection.commit()
-                msg = 'INSERT SUCCESS!'
+                    cursor.execute("INSERT INTO Pantry (pantryId, ingId, userId, qty, unit, purchDate, expDate) VALUES(NULL, %s, %s, %s, %s, %s, %s)", (ingId, uId, qty, unit, pdate, edate))
+                    mysql.connection.commit()
+                    msg = 'INSERT SUCCESS!'
+                else:
+                    msg = 'INVALID INGREDIENT!'
 
         elif request.method == 'POST':
             msg = 'EMTPY ENTRY'
@@ -158,64 +161,78 @@ def pantryadd():
     else:
         return redirect(url_for('login'))
 
+@app.route("/login/pantry/update/<item>", methods=['GET', 'POST'])
+def updatePantry(item):
+    p = re.compile('(?<!\\\\)\'')
+    item = p.sub('\"', item)
+    itemdict = json.loads(re.sub(r'datetime\.date\(([^)]*)\)', r'[\1]', item))
+    pstr = datetime.date(itemdict['pdate'][0], itemdict['pdate'][1], itemdict['pdate'][2])
+    estr = datetime.date(itemdict['edate'][0], itemdict['edate'][1], itemdict['edate'][2])
+    itemdict['pdate'] = pstr.strftime('%Y-%m-%d')
+    itemdict['edate'] = estr.strftime('%Y-%m-%d')
 
+    msg=''
+    qty=''
+    unit=''
+    pdate=''
+    edate=''
 
-@app.route("/login/pantry/addone", methods=['GET', 'POST'])
-def pantryaddone():
     if 'loggedin' in session:
-        msg = ''
-        ingName = ''
-        qty = ''
-        unit = ''
-        pdate = ''
-        edate = ''
+        if bool(itemdict):
+            if request.method == 'POST' and 'qty' in request.form  and 'unit' in request.form  and 'pdate' in request.form  and 'edate' in request.form:
+                cursor = mysql.connection.cursor()
 
-        if request.method == 'POST' and 'ingName' in request.form and 'qty' in request.form  and 'unit' in request.form  and 'pdate' in request.form  and 'edate' in request.form:
-            ingName = request.form['ingName']
-            qty = request.form['qty']
-            unit = request.form['unit']
-            pdate = request.form['pdate']
-            edate = request.form['edate']
-
-            #auto increment adjustment
-            count = str(cursor.execute("SELECT COUNT(pantryId) FROM Pantry"))
-            if count == 0:
-                cursor.execute("ALTER TABLE pantryId AUTO_INCREMENT = 1")
+                qty = request.form['qty']
+                unit = request.form['unit']
+                pdate = request.form['pdate']
+                edate = request.form['edate']
+                pantryId = str(itemdict['pantryId'])
+                cursor.execute("UPDATE Pantry SET qty = %s, unit = %s, purchDate = %s, expDate = %s WHERE pantryId = %s", (qty, unit, pdate, edate, pantryId))
                 mysql.connection.commit()
+                msg = 'UPDATE SUCCESS!'
+        else:
+            msg='ERROR FETCHING ENTRY!'
 
-            cursor.execute("SELECT ingId FROM Ingredient WHERE ingName = %s", (ingName))
-            ingId = cursor.fetchone()
-            uId = str(session['userId'])
-            cursor.execute("INSERT INTO Pantry VALUES(NULL, %s, %s, %s, %s, %s, %s)", (ingId, uId, qty, unit, pdate, edate))
-            mysql.connection.commit()
-            msg = 'ADD SUCCESS!'
-
-            # cursor = mysql.connection.cursor()
-            # cursor.execute("SELECT * FROM userAccount WHERE userName = %s", (userName,))
-            # account = cursor.fetchone()
-            # #print(account)
-            # if account:
-            #     msg = 'USERNAME EXISTS!'
-            # elif not re.match(r'^[A-Za-z]+$', userName):
-            #     msg = 'INVALID USER NAME'
-            # elif bool(re.search(r"\s", pwd)):
-            #     msg = 'INVALID PASSWORD WITH SPACE'
-            # else:
-            #     #auto increment adjustment
-            #     count = str(cursor.execute("SELECT COUNT(userId) FROM userAccount"))
-            #     if count == 0:
-            #         cursor.execute("ALTER TABLE userAccount AUTO_INCREMENT = 1")
-            #         mysql.connection.commit()
-
-            #     cursor.execute("INSERT INTO userAccount VALUES(NULL, %s, %s)", (userName, pwd))
-            #     mysql.connection.commit()
-            #     msg = 'REGISTER SUCCESS!'
-        elif request.method == 'POST':
-            msg = 'EMTPY ENTRY'
-        
-        return render_template("pantryaddone.html", msg=msg)
+        return render_template("updatePantry.html", msg=msg, item=itemdict)
     else:
         return redirect(url_for('login'))
+
+@app.route("/login/pantry/delete/<item>", methods=['GET', 'POST'])
+def deletePantry(item):
+    p = re.compile('(?<!\\\\)\'')
+    item = p.sub('\"', item)
+    itemdict = json.loads(re.sub(r'datetime\.date\(([^)]*)\)', r'[\1]', item))
+    pstr = datetime.date(itemdict['pdate'][0], itemdict['pdate'][1], itemdict['pdate'][2])
+    estr = datetime.date(itemdict['edate'][0], itemdict['edate'][1], itemdict['edate'][2])
+    itemdict['pdate'] = pstr.strftime('%Y-%m-%d')
+    itemdict['edate'] = estr.strftime('%Y-%m-%d')
+    msg = ''
+    pantryId = str(itemdict['pantryId'])
+
+    if bool(itemdict):
+        if request.method == 'GET':
+            cursor = mysql.connection.cursor()
+            cursor.execute("SELECT * FROM Pantry WHERE pantryId = %s", (pantryId))
+            entry = cursor.fetchone()
+
+            if not entry:
+                msg = 'INGREDIENT IN PANTRY DOES NOT EXISTS!'
+            else:
+                cursor.execute("DELETE FROM Pantry WHERE pantryId = %s", (pantryId))
+
+                #auto increment adjustment
+                lastId = str(cursor.execute("SELECT MAX(pantryId) FROM Pantry"))       
+                cursor.execute("UPDATE Pantry SET pantryId = pantryId-1 WHERE pantryId > %s", (pantryId))
+                query = "ALTER TABLE Pantry AUTO_INCREMENT = {}".format(lastId)
+                cursor.execute(query)
+
+                mysql.connection.commit()
+                msg = 'DELETE SUCCESS!'
+    else:
+        msg = 'NO PANTRYID'
+    
+    return render_template("deletePantry.html", msg=msg, item=itemdict)
+
 
 @app.route("/read", methods=['GET','POST'])
 def read():

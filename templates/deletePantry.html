@@ -7,11 +7,13 @@
     </head>    
     <body>
         <center>
-            <h2>PANTRY</h2>
-            <h3>USER NAME: {{userName}}</h3>
+        <div class="DELETE">
+            <h2>DELETE</h2>
+            <h3>DELETED INGREDIENT IN PANTRY:</h3>
             <table>
                 <thead>
                     <tr>
+                        <th>Pantry Id</th>
                         <th>Ingredient Name</th>
                         <th>Quantity</th>
                         <th>Unit</th>
@@ -19,25 +21,28 @@
                         <th>Expiration Date</th>
                     </tr>
                 </thead>
+                {% if item %}
                 <tbody>
-                    {% for item in output %}
                     <tr>
-                      <td>{{item['name']}}</td>   
+                      <td>{{item['pantryId']}}</td>   
+                      <td>{{item['name']}}</td> 
                       <td>{{item['qty']}}</td> 
                       <td>{{item['unit']}}</td> 
                       <td>{{item['pdate']}}</td> 
                       <td>{{item['edate']}}</td> 
-                      <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
-                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
                     </tr>    
-                    {% endfor %}
                 </tbody>
+                {% endif %}
             </table>
-            <div>
-                <a href="{{url_for('home')}}">HOME</a>
-                <a href="{{url_for('pantryadd')}}">ADD</a>
-                <a href="{{url_for('logout')}}">LOGOUT</a>
-            </div>
+        </div>
+        <div class="url">
+            <a href="{{url_for('home')}}">HOME</a>
+            <a href="{{url_for('pantry')}}">PANTRY</a>
+            <a href="{{url_for('logout')}}">LOGOUT</a>
+        </div>
+        {% if msg %}
+        <div class="msg">{{msg}}</div>
+        {% endif %}
         </center>
     </body>
 </html>

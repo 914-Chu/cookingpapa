@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CRUD TEST</title>
+    </head>    
+    <body>
+        <center>
+        <div class="UPDATE">
+            <h2>UPDATE FOR {{item['name']}}</h2>
+            <form method="post">
+                <label for="qty">Quantity:</label>
+                <input type="text" name="qty" id="qty" value="{{item['qty']}}" required>
+                <label for="unit">Unit:</label>
+                <input type="text" name="unit" id="unit" value="{{item['unit']}}" required>
+                <label for="pdate">Purchase Date:</label>
+                <input type="date" name="pdate" id="pdate" value="{{item['pdate']}}" required>
+                <label for="edate">Expiration Date:</label>
+                <input type="date" name="edate" id="edate" value="{{item['edate']}}" required>
+                <input type="submit" value="Update">
+            </form>  
+        </div>
+        <div class="url">
+            <a href="{{url_for('home')}}">HOME</a>
+            <a href="{{url_for('pantry')}}">PANTRY</a>
+            <a href="{{url_for('logout')}}">LOGOUT</a>
+        </div>
+        {% if msg %}
+        <div class="msg">{{msg}}</div>
+        {% endif %}
+        </center>
+    </body>
+</html>
