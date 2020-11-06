@@ -224,21 +224,21 @@ def deletePantry(item):
     itemdict['edate'] = estr.strftime('%Y-%m-%d')
     msg = ''
     pantryId = str(itemdict['pantryId'])
-
+    print(type(pantryId))
     if bool(itemdict):
         if request.method == 'GET':
             cursor = mysql.connection.cursor()
-            cursor.execute("SELECT * FROM Pantry WHERE pantryId = %s", (pantryId))
+            cursor.execute("SELECT * FROM Pantry WHERE pantryId = %s", (pantryId,))
             entry = cursor.fetchone()
 
             if not entry:
                 msg = 'INGREDIENT IN PANTRY DOES NOT EXISTS!'
             else:
-                cursor.execute("DELETE FROM Pantry WHERE pantryId = %s", (pantryId))
+                cursor.execute("DELETE FROM Pantry WHERE pantryId = %s", (pantryId,))
 
                 #auto increment adjustment
                 lastId = str(cursor.execute("SELECT MAX(pantryId) FROM Pantry"))       
-                cursor.execute("UPDATE Pantry SET pantryId = pantryId-1 WHERE pantryId > %s", (pantryId))
+                cursor.execute("UPDATE Pantry SET pantryId = pantryId-1 WHERE pantryId > %s", (pantryId,))
                 query = "ALTER TABLE Pantry AUTO_INCREMENT = {}".format(lastId)
                 cursor.execute(query)
 
