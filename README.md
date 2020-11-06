@@ -56,5 +56,5 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
 </p>
 
 ## Notes
-<p>Everytime you fetch and pull, you will need to delete your virtual environment folder <b>venv/</b> and redo these steps. Sorry!</p>
+<p>Everytime you fetch and pull, you <em><b>probably</b></em> will need to delete your virtual environment folder <b>venv/</b> and redo these steps. Sorry!</p>
 <p>If things go south, visit <em>https://code.visualstudio.com/docs/python/tutorial-flask</em></p>
