@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CRUD TEST</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    </head>   
+
+    <body>
+        <script>
+            $(document).ready(function () {
+                var ridx = 0;
+                $('#addBtn').on('click', function (){
+                    $('#tbody').append(`<tr id="R${++ridx}">
+                                            <td class="row-index text-center">
+                                                <label for="Row">Row:</label>
+                                                <p>${ridx}</p>  
+                                            </td>  
+                                            <td class="text-center">
+                                                <input type="text" name="ingName${ridx}" id="ingName${ridx}" list="ingList" required> 
+                                                <datalist id="ingList">
+                                                    {% for item in ings %}
+                                                        <option value="{{ item }}" style="background: beige;">{{ item }}</option>
+                                                    {% endfor %}
+                                                </datalist>
+                                            </td> 
+                                            <td class="text-center">
+                                                <input type="text" name="qty${ridx}" id="qty${ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <input type="text" name="unit${ridx}" id="unit${ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <input type="date" name="pdate${ridx}" id="pdate${ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <input type="date" name="edate${ridx}" id="edate${ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <button class="btn btn-danger remove" type = "button">
+                                                    Remove
+                                                </button>    
+                                            </td>
+                                        </tr>`);
+                });
+
+                $('#tbody').on('click', '.remove', function() {
+                    var newrow = $(this).closest('tr').nextAll();
+                    
+                    newrow.each(function () {
+                        var id = $(this).attr('id');
+                        var idx = $(this).children('.row-index').children('p');
+                        var dig = parseInt(id.substring(1));
+                        idx.html(`${dig - 1}`);
+                        $(this).attr('id', `R${dig - 1}`);
+                    });
+                    $(this).closest('tr').remove();
+                    ridx--;
+                });
+
+
+            });
+        </script>
+        <center>
+        <div class="PANTRYADD">
+            <h2>ADD INGREDIENTS</h2>
+            <!-- <input type="text" id="livebox"> -->
+            <form method="post">
+                <div class="container pt-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Row</th>
+                                    <th class="text-center">Ingredient Name</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Unit</th>
+                                    <th class="text-center">Purchase Date</th>
+                                    <th class="text-center">Expiration Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-md btn-primary" id="addBtn" type="button">
+                        ADD NEW ROW
+                    </button>
+                </div>
+                <input type="submit" value="ADD">
+            </form>
+        </div>
+        <div class="url">
+            <a href="{{url_for('home')}}">HOME</a>
+            <a href="{{url_for('pantry')}}">PANTRY</a>
+            <a href="{{url_for('logout')}}">LOGOUT</a>
+        </div>
+        {% if msg %}
+        <div class="msg">{{msg}}</div>
+        {% endif %}
+        </center>
+    </body>
+    <!-- <script>
+        
+        $(document).ready(function() {
+                window.ridx = 0;
+                
+                $('#addBtn').on('click', function (){
+                    
+                    $('#tbody').append(`<tr id="R${++window.ridx}">
+                                            <td class="row-index text-center">
+                                                <label for="Row">Row:</label>
+                                                <p>${window.ridx}</p>  
+                                            </td>  
+                                            <td class="text-center">
+                                                <label for="ingName">Ingredient Name:</label>
+                                                <input type="text" name="ingName${window.ridx}" id="ingName${window.ridx}" class="ingredientName" required> 
+                                                <p id = "datalist"></p>
+                                            </td> 
+                                            <td class="text-center">
+                                                <label for="qty">Quantity:</label>
+                                                <input type="text" name="qty${window.ridx}" id="qty${window.ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <label for="unit">Unit:</label>
+                                                <input type="text" name="unit${window.ridx}" id="unit${window.ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <label for="pdate">Purchase Date:</label>
+                                                <input type="date" name="pdate${window.ridx}" id="pdate${window.ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <label for="edate">Expiration Date:</label>
+                                                <input type="date" name="edate${window.ridx}" id="edate${window.ridx}" required> 
+                                            </td> 
+                                            <td class="text-center">
+                                                <button class="btn btn-danger remove" type = "button">
+                                                    Remove
+                                                </button>    
+                                            </td>
+                                        </tr>`);
+                                        console.log("in loop: " + window.ridx);
+                                    
+                });
+
+                $('#tbody').on('click', '.remove', function() {
+                    var newrow = $(this).closest('tr').nextAll();
+                    
+                    newrow.each(function () {
+                        var id = $(this).attr('id');
+                        var idx = $(this).children('.row-index').children('p');
+                        var dig = parseInt(id.substring(1));
+                        idx.html(`${dig - 1}`);
+                        $(this).attr('id', `R${dig - 1}`);
+                    });
+                    $(this).closest('tr').remove();
+                    window.ridx--;
+                });
+            
+            //console.log("num of element: " + window.ridx)
+
+            // var values = $('.ingredientName').length;
+            
+
+            
+            $(document).on("input",'#ingName1',function(){
+                textinlivebox = $('#ingName1').val();
+                console.log(textinlivebox); // checks that text will update live while user types
+                // Start ajax code
+                $.ajax({
+                    method:"post",
+                    url:"/live-search",
+                    data:{text:textinlivebox}, // data:{backend_name:frontend_name}
+                    // if successful write the results from app.py
+                    success:function(res){
+                        // console.log(res) // checks that app.py returns jsonified results from query into res
+                        var data = '<ul style="list-style-type:none;">';
+                        $.each(res,function(index,value){
+                            // <li><a href="#">value</a></li>
+                            data += '<li><a>';
+                            data += value.name;
+                            data += '</a></li>';
+                        });
+                        data += "</ul>";
+                        $("#datalist").html(data);
+                        
+                        // var availableOptions = []
+                        // $.each(res,function(index,value){
+                        //     availableOptions.push(value.name);
+                        // });
+                        // $("#ingName1").autocomplete({
+                        //     source: availableOptions
+                        // })
+                    }
+                })
+            
+            })
+        })
+    </script> -->
+</html>
