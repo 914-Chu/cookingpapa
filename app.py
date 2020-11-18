@@ -249,6 +249,36 @@ def deletePantry(item):
     
     return render_template("deletePantry.html", msg=msg, item=itemdict)
 
+@app.route('/login/pantry/checkDate', methods=['GET', 'POST'])
+def checkDate():
+    expInterval = "2"
+    
+    if 'loggedin' in session:
+        if request.method == "POST" and 'day' in request.form and int(request.form['day']) > 0:
+            expInterval = request.form['day']
+
+        cursor = mysql.connection.cursor()
+        #EXPIRED IN ? DAYS
+        query = """SELECT Pantry.pantryId AS pantryId, Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.expDate AS edate
+                          FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
+                          WHERE Pantry.userId = {}
+                          AND Pantry.expDate <= DATE_ADD(CURDATE(), INTERVAL {} DAY)
+                          AND Pantry.expDate >= CURDATE()""".format(session['userId'], expInterval)
+        #ALREADY EXPIRED 
+        query2 = """SELECT Pantry.pantryId AS pantryId, Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.expDate AS edate
+                          FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
+                          WHERE Pantry.userId = {}
+                          AND Pantry.expDate <= DATE_ADD(CURDATE(), INTERVAL {} DAY)
+                          AND Pantry.expDate < CURDATE()""".format(session['userId'], expInterval)
+        cursor.execute(query)
+        expiredSoon = cursor.fetchall()
+        cursor.execute(query2)
+        expired = cursor.fetchall()
+
+        return render_template('checkDate.html', expInterval=expInterval, expiredSoon=expiredSoon, expired=expired)
+    else:
+        return redirect(url_for('login'))
+
 
 @app.route("/read", methods=['GET','POST'])
 def read():
@@ -322,6 +352,9 @@ def delete(userId):
         msg = 'NO USERID'
     
     return render_template("delete.html", msg=msg, account=account)
+   
+
+
 '''
 #live-search
 @app.route("/live-search-box")
