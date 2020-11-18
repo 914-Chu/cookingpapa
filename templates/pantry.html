@@ -44,39 +44,46 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>CRUD TEST</title>
-    </head>    
-    <body>
-        <center>
-            <h2>PANTRY</h2>
-            <h3>USER NAME: {{userName}}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ingredient Name</th>
-                        <th>Unit</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in output %}
-                    <tr>
-                      <td>{{item['name']}}</td> 
-                      <td>{{item['unit']}}</td>   
-                      <td>{{item['qty']}}</td> 
-                      <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
-                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
-                    </tr>    
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                <a href="{{url_for('home')}}">HOME</a>
-                <a href="{{url_for('pantryadd')}}">ADD</a>
-                <a href="{{url_for('logout')}}">LOGOUT</a>
-            </div>
-        </center>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <title>CRUD TEST</title>
+  </head>
+  <body>
+    <center>
+      <h2>PANTRY</h2>
+      <h3>USER NAME: {{userName}}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ingredient Name</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in output %}
+          <tr>
+            <td>{{item['name']}}</td>
+            <td>{{item['unit']}}</td>
+            <td>{{item['qty']}}</td>
+            <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
+            <td>
+              <a
+                href="{{url_for('deletePantry', item=item)}}"
+                onclick="return confirm('Are you sure for the deletion?')"
+                >DELETE</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div>
+        <a href="{{url_for('home')}}">HOME</a>
+        <a href="{{url_for('pantryadd')}}">ADD</a>
+        <a href="{{url_for('checkDate')}}">CheckDate</a>
+        <a href="{{url_for('logout')}}">LOGOUT</a>
+      </div>
+    </center>
+  </body>
 </html>

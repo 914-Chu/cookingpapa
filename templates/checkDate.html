@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CRUD TEST</title>
+  </head>
+  <body>
+    <center>
+      <h2>CHECKDATE</h2>
+      <h3>EXPIRED SOON</h3>
+      <form method="post">
+        <label>EXPIRED IN </label>
+        <input
+          type="text"
+          name="day"
+          id="day"
+          value="{{expInterval}}"
+          size="4"
+        />
+        <label>DAYS</label>
+        <input type="submit" value="Check" />
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>PantryId</th>
+            <th>Ingredient Name</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Expiration Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in expiredSoon %}
+          <tr>
+            <td>{{item['pantryId']}}</td>
+            <td>{{item['name']}}</td>
+            <td>{{item['qty']}}</td>
+            <td>{{item['unit']}}</td>
+            <td>{{item['edate']}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h3>EXPIRED</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>PantryId</th>
+            <th>Ingredient Name</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Expiration Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in expired %}
+          <tr>
+            <td>{{item['pantryId']}}</td>
+            <td>{{item['name']}}</td>
+            <td>{{item['qty']}}</td>
+            <td>{{item['unit']}}</td>
+            <td>{{item['edate']}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div>
+        <a href="{{url_for('home')}}">HOME</a>
+        <a href="{{url_for('pantry')}}">PANTRY</a>
+        <a href="{{url_for('logout')}}">LOGOUT</a>
+      </div>
+    </center>
+  </body>
+</html>
