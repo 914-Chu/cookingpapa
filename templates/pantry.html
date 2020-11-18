@@ -27,16 +27,16 @@
                       <td>{{item['unit']}}</td> 
                       <td>{{item['pdate']}}</td> 
                       <td>{{item['edate']}}</td> 
-                      <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
-                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
+                      <td><a href="{{url_for('updatePantry', item=item)}}"><button></button>UPDATE</button></a></td>
+                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button>DELETE</button></a></td>
                     </tr>    
                     {% endfor %}
                 </tbody>
             </table>
             <div>
-                <a href="{{url_for('home')}}">HOME</a>
-                <a href="{{url_for('pantryadd')}}">ADD</a>
-                <a href="{{url_for('logout')}}">LOGOUT</a>
+                <a href="{{url_for('home')}}"><button>HOME</button></a>
+                <a href="{{url_for('pantryadd')}}"><button>ADD</button></a>
+                <a href="{{url_for('logout')}}"><button>LOGOUT</button></a>
             </div>
         </center>
     </body>

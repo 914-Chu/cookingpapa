@@ -2,21 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 #from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-<<<<<<< HEAD
 from pymongo import MongoClient
 # import re
-=======
 import re
 import json
 import datetime
->>>>>>> 3ed1fbb91d4c53dfa77e2db48054bfadd5b08c2b
 
 client = MongoClient("mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
 db = client.cookingpapa
 serverStatusResult=db.command("serverStatus")
-print(serverStatusResult)
+#print(serverStatusResult)
 recipes=db.recipes
-print(recipes.find_one({"name":"cereal with milk"}))
+#print(recipes.find_one({"name":"cereal with milk"}))
 
 app = Flask(__name__)
 app.secret_key = 'cookingpapa'
@@ -31,6 +28,10 @@ mysql = MySQL(app)
 @app.route("/index")
 def index():
     return render_template("index.html")
+
+@app.route("/frontpage")
+def frontpage():
+    return render_template("frontpage.html")
 
 @app.route("/register", methods=['GET','POST'])
 def register():

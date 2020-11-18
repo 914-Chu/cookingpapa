@@ -4,7 +4,39 @@
     <head>
         <meta charset="utf-8">
         <title>CRUD TEST</title>
-    </head>    
+    </head> 
+    <style>
+        label {
+            display: block;
+            padding: 8px;
+            
+        }
+        .button {
+            background-color: white;
+            border: none;
+            color: black;
+            border-radius: 12px;
+            padding: 14px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+        
+        .button1:hover {
+            background-color:rgb(40, 209, 167);
+            color: black;
+        }
+        .button2:hover {
+            background-color: rgb(40, 209, 167);
+            color: black;
+
+        }
+
+    </style>   
     <body>
         <center>
         <div class="LOGIN">
@@ -14,13 +46,15 @@
                 <input type="text" name="userName" id="userName" required>
                 <label for="pwd">Password:</label>
                 <input type="text" name="pwd" id="pwd" required>
-                <input type="submit" value="Login">
+                <input type="submit" value="Login"> 
+                
             </form>  
         </div>
         <div class="url">
-            <a href="{{url_for('index')}}">INDEX</a>
-            <a href="{{url_for('register')}}">REGISTER</a>
+            <a href="{{url_for('index')}}"><button class="button button1">INDEX</button></a>
+            <a href="{{url_for('register')}}"><button class="button button2">REGISTER</button></a>
         </div>
+    
         {% if msg %}
         <div class="msg">{{msg}}</div>
         {% endif %}
