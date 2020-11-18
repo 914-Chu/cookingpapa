@@ -6,11 +6,6 @@
         <title>CRUD TEST</title>
     </head> 
     <style>
-        label {
-            display: block;
-            padding: 8px;
-            
-        }
         .button {
             background-color: white;
             border: none;
@@ -25,7 +20,16 @@
             transition-duration: 0.4s;
             cursor: pointer;
         }
-        
+        .button1 {
+            position: absolute;
+            top: 10px;
+            right: 130px;
+        }
+        .button2 {
+            position: absolute;
+            top: 10px;
+            right: 30px;
+        }
         .button1:hover {
             background-color:rgb(40, 209, 167);
             color: black;
@@ -39,25 +43,15 @@
     </style>   
     <body>
         <center>
-        <div class="LOGIN">
-            <h2>LOGIN</h2>
-            <form method="post">
-                <label for="firstName">User Name:</label>
-                <input type="text" name="userName" id="userName" required>
-                <label for="pwd">Password:</label>
-                <input type="text" name="pwd" id="pwd" required>
-                <input type="submit" value="Login"> 
-                
-            </form>  
+        <div>
+            <h1>COOKINGPAPA!</h1>
         </div>
+      
         <div class="url">
-            <a href="{{url_for('index')}}"><button class="button button1">INDEX</button></a>
-            <a href="{{url_for('register')}}"><button class="button button2">REGISTER</button></a>
+            <a href="{{url_for('login')}}"><button class="button button1">LOGIN</button></a>
+            <a href="{{url_for('register')}}"><button class="button button2">SIGN UP</button></a>
         </div>
     
-        {% if msg %}
-        <div class="msg">{{msg}}</div>
-        {% endif %}
         </center>
     </body>
 </html>

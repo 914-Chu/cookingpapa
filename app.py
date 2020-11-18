@@ -2,9 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 #from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+from pymongo import MongoClient
+# import re
 import re
 import json
 import datetime
+from collections import OrderedDict
+
+client = MongoClient("mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+db = client.cookingpapa
+serverStatusResult=db.command("serverStatus")
+#print(serverStatusResult)
+recipes=db.recipes
+#print(recipes.find_one({"name":"cereal with milk"}))
 
 app = Flask(__name__)
 app.secret_key = 'cookingpapa'
@@ -16,9 +26,17 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+unitConversions =   {'g-mg':1000.0, 'mg-g':0.001,
+                    'l-ml:':1000.0, 'ml-l':0.001,
+                    }
+
 @app.route("/index")
 def index():
     return render_template("index.html")
+
+@app.route("/frontpage")
+def frontpage():
+    return render_template("frontpage.html")
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -99,16 +117,33 @@ def home():
 @app.route("/login/pantry")
 def pantry():
     if 'loggedin' in session:
-        cursor = mysql.connection.cursor()
+        '''cursor = mysql.connection.cursor()
         # query = "ALTER TABLE userAccount AUTO_INCREMENT = {}".format(lastId)
         query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
                           FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                           WHERE Pantry.userId = {}""".format(session['userId'])
         cursor.execute(query)
-        output = cursor.fetchall()
-        return render_template('pantry.html', userName = session['userName'], output=output)
+        output = cursor.fetchall()'''
+        # Below function call to replace line 102-108 
+        return prettyPantryDescription() # ADVANCED SQL QUERY #1
+        '''return render_template('pantry.html', userName = session['userName'], output=output)'''
     else:
         return redirect(url_for('login'))
+
+# ADVANCED SQL QUERY #1
+# NOTES: Use stored procedures to convert units to standardized units so no conversion
+# Need to be called by pantry()
+# parameter pantryRecords 
+def prettyPantryDescription():
+    cursor = mysql.connection.cursor()
+    query = """SELECT Ingredient.name AS name, Pantry.unit AS unit, SUM(Pantry.qty) AS qty
+                            FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
+                            WHERE Pantry.userId = {}
+                            GROUP BY Ingredient.name, Pantry.unit
+                            ORDER BY Ingredient.name, Pantry.unit""".format(session['userId'])
+    cursor.execute(query)
+    output = cursor.fetchall()
+    return render_template('pantry.html', userName = session['userName'], output=output)                        
 
 @app.route("/login/pantry/add", methods=['GET', 'POST'])
 def pantryadd():

@@ -1,3 +1,46 @@
+<!-- <!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CRUD TEST</title>
+    </head>    
+    <body>
+        <center>
+            <h2>PANTRY</h2>
+            <h3>USER NAME: {{userName}}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ingredient Name</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Purchase Date</th>
+                        <th>Expiration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in output %}
+                    <tr>
+                      <td>{{item['name']}}</td>   
+                      <td>{{item['qty']}}</td> 
+                      <td>{{item['unit']}}</td> 
+                      <td>{{item['pdate']}}</td> 
+                      <td>{{item['edate']}}</td> 
+                      <td><a href="{{url_for('updatePantry', item=item)}}"><button></button>UPDATE</button></a></td>
+                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button>DELETE</button></a></td>
+                    </tr>    
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <a href="{{url_for('home')}}"><button>HOME</button></a>
+                <a href="{{url_for('pantryadd')}}"><button>ADD</button></a>
+                <a href="{{url_for('logout')}}"><button>LOGOUT</button></a>
+            </div>
+        </center>
+    </body>
+</html> -->
 <!DOCTYPE html>
 
 <html>
@@ -13,20 +56,16 @@
         <thead>
           <tr>
             <th>Ingredient Name</th>
-            <th>Quantity</th>
             <th>Unit</th>
-            <th>Purchase Date</th>
-            <th>Expiration Date</th>
+            <th>Quantity</th>
           </tr>
         </thead>
         <tbody>
           {% for item in output %}
           <tr>
             <td>{{item['name']}}</td>
-            <td>{{item['qty']}}</td>
             <td>{{item['unit']}}</td>
-            <td>{{item['pdate']}}</td>
-            <td>{{item['edate']}}</td>
+            <td>{{item['qty']}}</td>
             <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
             <td>
               <a
@@ -42,7 +81,7 @@
       <div>
         <a href="{{url_for('home')}}">HOME</a>
         <a href="{{url_for('pantryadd')}}">ADD</a>
-        <a href="{{url_for('checkDate')}}">CHECKDATE</a>
+        <a href="{{url_for('checkDate')}}">CheckDate</a>
         <a href="{{url_for('logout')}}">LOGOUT</a>
       </div>
     </center>
