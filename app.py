@@ -2,10 +2,19 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 #from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+from pymongo import MongoClient
+# import re
 import re
 import json
 import datetime
 from collections import OrderedDict
+
+client = MongoClient("mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+db = client.cookingpapa
+serverStatusResult=db.command("serverStatus")
+#print(serverStatusResult)
+recipes=db.recipes
+#print(recipes.find_one({"name":"cereal with milk"}))
 
 app = Flask(__name__)
 app.secret_key = 'cookingpapa'
@@ -24,6 +33,10 @@ unitConversions =   {'g-mg':1000.0, 'mg-g':0.001,
 @app.route("/index")
 def index():
     return render_template("index.html")
+
+@app.route("/frontpage")
+def frontpage():
+    return render_template("frontpage.html")
 
 @app.route("/register", methods=['GET','POST'])
 def register():

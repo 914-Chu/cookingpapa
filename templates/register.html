@@ -4,7 +4,15 @@
     <head>
         <meta charset="utf-8">
         <title>CRUD TEST</title>
-    </head>    
+    </head> 
+    <style>
+         label {
+             display: block;
+             padding: 8px;
+             text-align: 50px 20px;
+         }
+    </style>   
+
     <body>
         <center>
         <div class="REGISTER">
@@ -18,9 +26,9 @@
             </form>  
         </div>
         <div class="url">
-            <a href="{{url_for('index')}}">INDEX</a>
-            <a href="{{url_for('login')}}">LOGIN</a>
-            <a href="{{url_for('read')}}">READ</a>
+            <a href="{{url_for('login')}}"><button>LOGIN</button></a>
+            <a href="{{url_for('read')}}"><button>READ</button></a>
+            
         </div>
         {% if msg %}
         <div class="msg">{{msg}}</div>
