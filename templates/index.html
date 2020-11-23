@@ -4,13 +4,41 @@
     <meta charset="UTF-8" />
     <title>CRUD TEST</title>
   </head>
+  <style>
+    body {
+      background-color: #ffc543;
+      margin: 0;
+      padding: 0;
+      font-family: helvetica;
+    }
+    .header a {
+      font-family: helvetica;
+      font-size: 30px;
+      margin-top: 5px;
+      margin-left:5px;
+      color: #d6970f;
+      font-weight: bold;
+      text-decoration: none;
+  }
+    .button {
+      color: black;
+      background-color: #ffc543;
+      border-color: transparent;
+    }
+    .button:hover {
+      color: #289cd1;
+    }
+  </style>
   <body>
+    <div class = "header">
+      <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+  </div>
     <center>
       <h2>INDEX</h2>
       <div>
-        <a href="{{url_for('login')}}"><button>LOGIN</button></a>
-        <a href="{{url_for('register')}}"><button>REGISTER</button></a>
-        <a href="{{url_for('read')}}"><button>READ</button></a>
+        <a href="{{url_for('login')}}"><button class = "button">LOGIN</button></a>
+        <a href="{{url_for('register')}}"><button class="button">REGISTER</button></a>
+        <a href="{{url_for('read')}}"><button class = "button">READ</button></a>
       </div>
     </center>
   </body>

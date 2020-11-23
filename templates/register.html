@@ -4,32 +4,121 @@
     <head>
         <meta charset="utf-8">
         <title>CRUD TEST</title>
+       
     </head> 
     <style>
-         label {
-             display: block;
-             padding: 8px;
-             text-align: 50px 20px;
-         }
+          body {
+            margin: 0;
+            padding: 0;
+            background: url('https://res.cloudinary.com/cookingpapa/image/upload/v1606009998/images/pikrepo.com_khujdr.jpg'); 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            /*background-color: #ffc543; */
+            
+            
+            
+        }
+        .header a {
+            font-family: helvetica;
+            font-size: 30px;
+            margin-top: 5px;
+            margin-left:5px;
+            color:white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .REGISTER {
+            margin-left: 120vh;
+            margin-top: 160px;
+            font-family: Helvetica;
+            width: 250px;
+            height: auto;
+            padding: 20px 30px;
+            background-color:rgba(17, 17, 17, 0.89);
+            border-radius: 10px;
+            box-sizing: border-box;
+            color: white;
+        } 
+        h2 {
+            margin: 0;
+            padding: 0 0 20px;
+            text-align: center;
+            font-size: 22px;
+        }
+        .REGISTER input {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .REGISTER p {
+
+            font-size: 16px;
+            text-align: left;
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+            color: white;
+
+        } 
+        .REGISTER input[type="text"] {
+            border: none;
+            border-bottom: 1px solid white;
+            background: transparent;
+            outline: none;
+            height: 40px;
+            text-align: left;
+            color: white;
+        }
+        .REGISTER input[type = "submit"] {
+            border: none;
+            outline: none;
+            height: 40px;
+            background-color: #ffc543;
+            border-radius: 5px;
+        }
+        ::placeholder {
+            color: white;
+        }
+
+        .button {
+            color: white;
+            font-weight: bold;
+            background-color:transparent;
+            border-color: transparent;
+        }
+        .button:hover {
+            color: #289cd1;
+        }
+
+        
+        
     </style>   
 
     <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+        </div>
         <center>
         <div class="REGISTER">
-            <h2>REGISTER</h2>
             <form method="post">
-                <label for="userName">User Name:</label>
-                <input type="text" name="userName" id="userName" required>
-                <label for="pwd">Password:</label>
-                <input type="text" name="pwd" id="pwd" required>
+                <h2>Register</h2>
+                <!--<label for="userName">User Name:</label> -->
+                <p> User Name</p>
+                <input type="text" name="userName" placeholder = "Enter User Name" id="userName" required>
+                <!-- <label for="pwd">Password:</label>-->
+                <p> Password</p>
+                <input type="text" name="pwd" placeholder = "Enter Password" id="pwd" required>
                 <input type="submit" value="Register">
-            </form>  
+                
+            </form> 
+            <div class="url">
+                <a href="{{url_for('login')}}"><button class ="button">LOGIN</button></a>
+                <a href="{{url_for('read')}}"><button class= "button">READ</button></a>
+
+            </div> 
         </div>
-        <div class="url">
-            <a href="{{url_for('login')}}"><button>LOGIN</button></a>
-            <a href="{{url_for('read')}}"><button>READ</button></a>
-            
-        </div>
+        
         {% if msg %}
         <div class="msg">{{msg}}</div>
         {% endif %}
