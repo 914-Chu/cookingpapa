@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>CRUD TEST</title>
+        <title>Register Cookingpapa</title>
        
     </head> 
     <style>
@@ -21,7 +21,7 @@
         }
         .header a {
             font-family: helvetica;
-            font-size: 30px;
+            font-size: 24px;
             margin-top: 5px;
             margin-left:5px;
             color:white;
@@ -31,7 +31,7 @@
 
         .REGISTER {
             margin-left: 120vh;
-            margin-top: 160px;
+            margin-top: 110px;
             font-family: Helvetica;
             width: 250px;
             height: auto;
@@ -61,6 +61,10 @@
             color: white;
 
         } 
+        .url p {
+            font-size: 14px;
+            color: white;
+        }
         .REGISTER input[type="text"] {
             border: none;
             border-bottom: 1px solid white;
@@ -74,7 +78,7 @@
             border: none;
             outline: none;
             height: 40px;
-            background-color: #ffc543;
+            background-color: #db9d47;
             border-radius: 5px;
         }
         ::placeholder {
@@ -87,6 +91,16 @@
             background-color:transparent;
             border-color: transparent;
         }
+        .button1 {
+            background-color: #db9d47;
+            border-radius: 5px;
+            height: 40px;
+            width: 100%;
+            margin-top: 15px;
+            border: none;
+            outline: none;
+            color: black;
+        }
         .button:hover {
             color: #289cd1;
         }
@@ -97,12 +111,12 @@
 
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/whitelogo_kjacwn.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
         </div>
         <center>
         <div class="REGISTER">
             <form method="post">
-                <h2>Register</h2>
+                <h2>Sign Up</h2>
                 <!--<label for="userName">User Name:</label> -->
                 <p> User Name</p>
                 <input type="text" name="userName" placeholder = "Enter User Name" id="userName" required>
@@ -113,8 +127,9 @@
                 
             </form> 
             <div class="url">
-                <a href="{{url_for('login')}}"><button class ="button">LOGIN</button></a>
-                <a href="{{url_for('read')}}"><button class= "button">READ</button></a>
+                <p class="account">Already have an account?</p>
+                <a href="{{url_for('login')}}"><button class ="button1">Login</button></a>
+                <!--<a href="{{url_for('read')}}"><button class= "button">READ</button></a>-->
 
             </div> 
         </div>
