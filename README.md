@@ -61,7 +61,14 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
 <p>If things go south, visit <em>https://code.visualstudio.com/docs/python/tutorial-flask</em></p>
 
 ## Pushing and pulling code
-<p> git status
-  git pull origin master --rebase
-  git push origin master </p>
+<p> Commands to ensure no code is being written over and your local changes are pushed
+  ```
+   git status
+  ```
+   git pull origin master --rebase
+  ```
+   git push origin master
+  ```
+
+</p>
 
