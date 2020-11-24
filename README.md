@@ -62,13 +62,9 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
 
 ## Pushing and pulling code
 <p> Commands to ensure no code is being written over and your local changes are pushed
-  ```
-   git status
-  ```
-   git pull origin master --rebase
-  ```
-   git push origin master
-  ```
-
+ .... git status
+  .... git pull orign master --rebase
+  .... git push origin master
+  
 </p>
 
