@@ -60,3 +60,8 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
 <p>Everytime you fetch and pull, you <em><b>probably</b></em> will need to delete your virtual environment folder <b>venv/</b> and redo these steps. Sorry!</p>
 <p>If things go south, visit <em>https://code.visualstudio.com/docs/python/tutorial-flask</em></p>
 
+## Pushing and pulling code
+<p> git status
+  git pull origin master --rebase
+  git push origin master </p>
+
