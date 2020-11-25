@@ -542,34 +542,5 @@ def showRecipeDetails():
     recipe['instructions'] = [{'display_text':'Heat almond milk on stove top to boiling point'},{'display_text':'Turn heat down to simmer and add the oats'},{'display_text':'When oats turn fluffy, add mashed banana'},{'display_text':'Remove into a bowl and serve immediately.'}]
     return render_template("recipeDetails.html", recipe=recipe)
 
-'''
-#live-search
-@app.route("/live-search-box")
-def live_search_box():
-    return render_template("pantryadd.html")
-'''
-
-
-@app.route("/live-search", methods=["GET", "POST"])
-def live_search():
-    searchbox = request.form.get("text")
-    cursor = mysql.connection.cursor()
-    query = "SELECT name FROM Ingredient WHERE name LIKE '%{}%' ORDER BY name".format(
-        searchbox)
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return jsonify(result)
-
-
-@app.route("/live-search-insert", methods=["POST"])
-def live_search_insert():
-    ingredient = request.form["ingredient"]
-
-    # Find ingredient name in Ingredient table
-    # Insert the ingredient_id from result to Pantry
-
-    if ingredient:
-        return jsonify({'name': 'Inserted '+ingredient})
-    return jsonify({'error': 'Missing Data!'})
 
 '''
