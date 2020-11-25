@@ -2,43 +2,77 @@
 <HTML lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>CRUD TEST</title>
+        <title>{{userName}} Homepage</title>
     </head>
     <style>
-          body {
+    body {
       background-color: #db9d47;
       margin: 0;
       padding: 0;
       font-family: helvetica;
     }
     .header a {
-            margin-top: 5px;
-            margin-left: 5px;  
-        }
+        margin-top: 5px;
+        margin-left: 5px;  
+    }
 
     .button {
       color: black;
       background-color: transparent;
       border-color: transparent;
+      font-size: 16px;
+      
     }
     .button:hover {
       color: #289cd1;
     }
+    * {
+        box-sizing: border-box;
+    }
+    .images {
+        float: center;
+        width: 50%;
+        padding: 5px;
+    }
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
     </style>
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+           <a><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
         </div>
         <center>
-        <h2>HOME</h2>
+        <h3>HOME</h3>
         {% if userName %}
-        <h3>USER NAME: {{userName}}</h3>
+        <h2>Welcome {{userName}}!</h2>
         {% endif %}
-        <div>
+        <div class="url">
             <a href="{{url_for('pantry')}}"><button class="button">PANTRY</button></a>
+            <a href="{{url_for('showRecipeDetails')}}"><button class="button">FIND NEW RECIPES</button></a>
             <a href="{{url_for('logout')}}"><button class="button">LOGOUT</button></a>
             <a href="{{url_for('findRecipes')}}"><button class="button">FIND RECIPES</button></a>
         </div>
+        <div class="row">
+            <div class="images">
+              <img src="https://res.cloudinary.com/cookingpapa/image/upload/v1606327987/images/pikrepo.com_3_ukyaip.jpg" alt="Snow" style="width:75%">
+            </div>
+            <div class="images">
+              <img src="https://res.cloudinary.com/cookingpapa/image/upload/v1606327965/images/pikrepo.com_1_fgjcul.jpg" alt="Forest" style="width:75%">
+            </div>
+        </div>
+        <div class="row">
+            <div class="images">
+              <img src="https://res.cloudinary.com/cookingpapa/image/upload/v1606327902/images/pikrepo.com_fmwjah.jpg" alt="Snow" style="width:75%">
+            </div>
+            <div class="images">
+              <img src="https://res.cloudinary.com/cookingpapa/image/upload/v1606327980/images/pikrepo.com_2_synumw.jpg" alt="Forest" style="width:75%">
+            </div>
+        </div>
+        
+       
         </center>
     </body>
 </HTML>
