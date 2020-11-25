@@ -38,6 +38,26 @@ def index():
 def frontpage():
     return render_template("frontpage.html")
 
+@app.route("/findRecipes")
+def findRecipes():
+    cursor = mysql.connection.cursor()
+    query = """SELECT Pantry.ingId
+                FROM Pantry
+                WHERE Pantry.userId = {}""".format(session['userId'])
+    cursor.execute(query)
+    result = cursor.fetchall()
+    usersIngredients = [i['ingId'] for i in result]     #list of ingredient ids that the user has
+    canCookRecipes = db.recipes.aggregate([
+        {"$unwind": "$sections"},
+        {"$unwind": "$sections.components"},
+        {"$group": {"_id": "$_id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
+        {"$project": {"_id": 1, "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
+        {"$sort": {"score": -1}},
+        {"$limit": 5},
+        ])
+    print(list(canCookRecipes))
+    return render_template('findRecipes.html')
+
 @app.route("/register", methods=['GET','POST'])
 def register():
     msg = ''
