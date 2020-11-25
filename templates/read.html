@@ -5,8 +5,28 @@
         <meta charset="utf-8">
         <title>CRUD TEST</title>
 
-    </head>    
+    </head> 
+    <style>
+        body {
+    background-color: #db9d47;
+    margin: 0;
+    padding: 0;
+    font-family: helvetica;
+  }
+  .header a {
+      font-family: helvetica;
+      font-size: 24px;
+      margin-top: 5px;
+      margin-left:5px;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+  }
+    </style>   
     <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+        </div>
         <center>
             <h2>READ</h2>
             <table>

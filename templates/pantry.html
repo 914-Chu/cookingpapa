@@ -48,7 +48,23 @@
     <meta charset="utf-8" />
     <title>CRUD TEST</title>
   </head>
+  <style>
+     body {
+      background-color: #db9d47;
+      margin: 0;
+      padding: 0;
+      font-family: helvetica;
+    }
+    .header a {
+            margin-top: 5px;
+            margin-left: 5px; 
+        }
+
+  </style>
   <body>
+    <div class = "header">
+      <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+  </div>
     <center>
       <h2>PANTRY</h2>
       <h3>USER NAME: {{userName}}</h3>

@@ -3,48 +3,78 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>CRUD TEST</title>
+        <title>Cookingpapa Home</title>
     </head> 
     <style>
+        body {
+            background-color: #db9d47;
+            margin:0 ;
+            padding:0;
+
+        }
+
+        .header a {
+            margin-top: 5px;
+            margin-left: 5px;
+    
+            
+        }
         .button {
-            background-color: white;
-            border: none;
+            background-color:transparent;
+            border-color: transparent;
             color: black;
-            border-radius: 12px;
-            padding: 14px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            margin: 4px 2px;
-            transition-duration: 0.4s;
-            cursor: pointer;
+            font-weight: bold;
+            font-size: medium;
         }
         .button1 {
             position: absolute;
             top: 10px;
-            right: 130px;
+            right: 130px; 
+            
         }
         .button2 {
             position: absolute;
             top: 10px;
             right: 30px;
+        } 
+        .button:hover {
+            color: #289cd1;
         }
-        .button1:hover {
-            background-color:rgb(40, 209, 167);
-            color: black;
+        .text h1 {
+            font-family: Helvetica;
+            font-size: larger;
+            text-align: left;
+            margin-left: 30px;
         }
-        .button2:hover {
-            background-color: rgb(40, 209, 167);
-            color: black;
+        .text p {
+            font-family: Helvetica;
+            font-size: medium;
+            text-align: left;
+            margin-left: 30px;
+        }
+        .cookingpapaimage {
+            position: absolute;
+            right: 0%;
 
         }
+      
+        
 
     </style>   
     <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+        </div>
         <center>
+        <div class="text">
+            <!--<h1 style= "font-family: Helvetica;">COOKINGPAPA!</h1>-->
+            <h1>All your Ingredients in One Place</h1>
+            <p>CookingPapa's Pantry feature tracks your ingredients (:</p>
+            <h1>Recipes FOR YOU</h1>
+            <p>We'll give you recipes based on your available ingredients and personal preferences</p> 
+        </div>
         <div>
-            <h1>COOKINGPAPA!</h1>
+            <img class="cookingpapaimage" src= "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/papa_meuak5.png" alt="cookingpapa">
         </div>
       
         <div class="url">

@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-# CS411-cookingpapa
-=======
-# CS411-cookingpapa
->>>>>>> 5ab54c68547de8eb78f3e3c611ad92e4b868b9ea
-=======
+
 # CS411-cookingpapa
 
 <p>Hello daddies! Welcome to CookingPapa with Joyce, Ardel, Nina, and Kamil; A.K.A JANK. If you want to run this application locally we are using VS Code so follow these steps:</p>
@@ -51,12 +45,12 @@ To create a terminal and automatically activate the virtual environment chosen, 
 For macOS/Linux:
 
 ```
-  python3 install flask -run
+  python3 -m flask run
 ```
 For Windows:
 
 ```
-  python install flask -run
+  python -m flask run
 ```
 
 Now, open your default browser and go to the our landing page <em>http://127.0.0.1:5000/index</em>
@@ -65,4 +59,15 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
 ## Notes
 <p>Everytime you fetch and pull, you <em><b>probably</b></em> will need to delete your virtual environment folder <b>venv/</b> and redo these steps. Sorry!</p>
 <p>If things go south, visit <em>https://code.visualstudio.com/docs/python/tutorial-flask</em></p>
->>>>>>> 3ed1fbb91d4c53dfa77e2db48054bfadd5b08c2b
+
+## Pushing and pulling code
+<p> Commands to ensure no code is being written over and your local changes are pushed
+  
+ ``` 
+  git status
+  git pull orign master --rebase
+  git push origin master
+ ````
+  
+</p>
+
