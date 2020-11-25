@@ -12,7 +12,7 @@ from collections import OrderedDict
 
 client = MongoClient("mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
 db = client.cookingpapa
-serverStatusResult=db.command("serverStatus")
+#serverStatusResult=db.command("serverStatus")
 #print(serverStatusResult)
 recipes=db.recipes
 #print(recipes.find_one({"name":"cereal with milk"}))
@@ -530,34 +530,14 @@ def delete(userId):
         msg = 'NO USERID'
 
     return render_template("delete.html", msg=msg, account=account)
-
-
-'''
-#live-search
-@app.route("/live-search-box")
-def live_search_box():
-    return render_template("pantryadd.html")
-'''
-
-
-@app.route("/live-search", methods=["GET", "POST"])
-def live_search():
-    searchbox = request.form.get("text")
-    cursor = mysql.connection.cursor()
-    query = "SELECT name FROM Ingredient WHERE name LIKE '%{}%' ORDER BY name".format(
-        searchbox)
-    cursor.execute(query)
-    result = cursor.fetchall()
-    return jsonify(result)
-
-
-@app.route("/live-search-insert", methods=["POST"])
-def live_search_insert():
-    ingredient = request.form["ingredient"]
-
-    # Find ingredient name in Ingredient table
-    # Insert the ingredient_id from result to Pantry
-
-    if ingredient:
-        return jsonify({'name': 'Inserted '+ingredient})
-    return jsonify({'error': 'Missing Data!'})
+   
+@app.route("/recipeDetails", methods=['GET'])
+def showRecipeDetails():
+    recipe = {}
+    recipe['name'] = 'Skinny Oatmeal'
+    recipe['beauty_url'] = 'https://www.eatyourselfskinny.com/wp-content/uploads/2016/01/blueberry-oatmeal-33.jpg'
+    recipe['tags'] = [{'type':'Lifestyle','display_name':'Weight loss'},{'type':'Dietary','display_name':'Vegan'}]
+    recipe['description'] = 'Whether you are getting in shape during quarantine or just plain bored, Skinny Oatmeal is the perfect breakfast food to kick start your metabolism'
+    recipe['ingredients'] = [{'name':'Old fashioned rolled oats','quantity':'0.5 cup'},{'name':'Almond milk', 'quantity':'1 cup'},{'name':'Bananas', 'quantity':'0.5'}]
+    recipe['instructions'] = [{'display_text':'Heat almond milk on stove top to boiling point'},{'display_text':'Turn heat down to simmer and add the oats'},{'display_text':'When oats turn fluffy, add mashed banana'},{'display_text':'Remove into a bowl and serve immediately.'}]
+    return render_template("recipeDetails.html", recipe=recipe)
