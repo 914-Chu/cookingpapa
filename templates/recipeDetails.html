@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="utf-8" />
+      <title>Recipe Details</title>
+    </head>
+    <style>
+        .container {
+            width: 70%;
+            max-width: 1096px;
+            margin: auto;
+        }
+        img.resize {
+            max-width: 40%;
+            max-height: 50%;
+        }
+        body {
+            background-color: #ffc543;
+            margin: 0;
+            padding: 0;
+            font-family: helvetica;
+        }
+        .header a {
+            font-family: helvetica;
+            font-size: 30px;
+            margin-top: 5px;
+            margin-left:5px;
+            color: #d6970f;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .button {
+            color: black;
+            background-color: transparent;
+            border-color: transparent;
+        }
+        .button:hover {
+            color: #289cd1;
+        }
+    </style>
+    <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+        </div>
+        <a href="{{url_for('home')}}"><button class="button">back</button></a>
+        <center>
+            <div class="container">
+                <h2>{{recipe['name']}}</h2>
+                <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
+                <img class="resize" src="{{ recipe['beauty_url'] }}" alt="{{recipe['name']}}" align="right">
+                <p align="left">{{recipe['description']}}</p>
+                <h4 align="left">Ingredients:</h4>
+                <ul align="left">
+                    {% for ingredient in recipe['ingredients'] %}
+                    <li>{{ingredient['name']}}</li>
+                    {% endfor %}
+                </ul>
+                <h4 align="left">Directions:</h4>
+                <ol>
+                    {% for instruction in recipe['instructions'] %}
+                    <li align="left">{{instruction['display_text']}}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </center>
+    </body>
+</html>
