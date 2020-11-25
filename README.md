@@ -65,9 +65,9 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
   
  ``` 
   git status
-  
- ```git pull orign master --rebase
-  ``` git push origin master
+  git pull orign master --rebase
+  git push origin master
+ ````
   
 </p>
 
