@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>CRUD TEST</title>
+        <title>Pantry Add</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -14,8 +14,55 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     </head>   
+    <style>
+        
+    body {
+      background-color: #db9d47;
+      margin: 0;
+      padding: 0;
+      font-family: helvetica;
+    }
+  
+    .PANTRYADD input[type="submit"] {
+        border-radius: 5px;
+      background-color:#463F3a;
+      border: none;
+      color: white;
+      padding: 7px;  
+    }
+    .header a {
+        margin-top: 5px;
+        margin-left: 5px;  
+    }
+    .url a, .url a:visited {
+      text-decoration: none;
+      font-weight: bold;
+      position: fixed;
+      top: 10px;
+      color: black;
+    }
+    .url a:hover {
+      color: #289cd1;
+    }
+    .btn-primary {
+        border-radius: 5px;
+        background-color:transparent;
+        border: none;
+        color: #463F3a;
+        padding: 5px; position: fixed;
+        right: 230px;
+        font-weight: bold;
+    }
+    .btn:hover {
+        color: #289cd1;
+        background-color: transparent;
 
+    }
+    </style>
     <body>
+        <div class = "header">
+            <a href = "{{url_for('home')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+        </div>
         <script>
             $(document).ready(function () {
                 var ridx = 0;
@@ -93,17 +140,16 @@
                             </tbody>
                         </table>
                     </div>
-                    <button class="btn btn-md btn-primary" id="addBtn" type="button">
-                        ADD NEW ROW
-                    </button>
+                    <button class="btn btn-md btn-primary" 
+                     id="addBtn" type="button">Add New Row</button>
                 </div>
-                <input type="submit" value="ADD">
+                <input type="submit" value="Insert">
             </form>
         </div>
         <div class="url">
-            <a href="{{url_for('home')}}">HOME</a>
-            <a href="{{url_for('pantry')}}">PANTRY</a>
-            <a href="{{url_for('logout')}}">LOGOUT</a>
+            <!--<a href="{{url_for('home')}}">HOME</a>-->
+            <a style="right: 110px;" href="{{url_for('pantry')}}">Pantry</a>
+        <a style="right:30px;" href="{{url_for('logout')}}">Logout</a>
         </div>
         {% if msg %}
         <div class="msg">{{msg}}</div>
