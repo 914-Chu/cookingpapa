@@ -550,13 +550,22 @@ def delete(userId):
 
     return render_template("delete.html", msg=msg, account=account)
    
-@app.route("/recipeDetails", methods=['GET'])
-def showRecipeDetails():
-    recipe = {}
-    recipe['name'] = 'Skinny Oatmeal'
-    recipe['beauty_url'] = 'https://www.eatyourselfskinny.com/wp-content/uploads/2016/01/blueberry-oatmeal-33.jpg'
-    recipe['tags'] = [{'type':'Lifestyle','display_name':'Weight loss'},{'type':'Dietary','display_name':'Vegan'}]
-    recipe['description'] = 'Whether you are getting in shape during quarantine or just plain bored, Skinny Oatmeal is the perfect breakfast food to kick start your metabolism'
-    recipe['ingredients'] = [{'name':'Old fashioned rolled oats','quantity':'0.5 cup'},{'name':'Almond milk', 'quantity':'1 cup'},{'name':'Bananas', 'quantity':'0.5'}]
-    recipe['instructions'] = [{'display_text':'Heat almond milk on stove top to boiling point'},{'display_text':'Turn heat down to simmer and add the oats'},{'display_text':'When oats turn fluffy, add mashed banana'},{'display_text':'Remove into a bowl and serve immediately.'}]
-    return render_template("recipeDetails.html", recipe=recipe)
+@app.route("/recipeDetails/<int:recipeId>", methods=['GET'])
+def showRecipeDetails(recipeId):
+    if not recipeId:
+        recipeId = 6908
+    
+    '''
+    recipe = list(recipes.aggregate([
+        { "$match": {"id":recipeId} },
+        { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
+                        "component":"$sections.name", "ingredients": "$sections.components.ingredient", "measurements":"$sections.components.measurements", "instructions":1} }
+    ]))
+    '''
+    
+    recipe = list(recipes.aggregate([
+        { "$match": {"id":recipeId} },
+        { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
+                        "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
+    ]))
+    return render_template("recipeDetails.html", recipe=recipe[0])
