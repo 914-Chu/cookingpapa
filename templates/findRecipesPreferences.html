@@ -34,30 +34,28 @@
         </div>
         <center>
             <div>
-                <h2>Recipes based on what you have in your pantry</h2>
+                <h2>Recipes based on your preferences</h2>
                 <table>
                     <thead>
                       <tr>
                         <th>Name</th>
                         <th>Image</th>
-                        <th>Percent<br />Match</th>
-                        <th>Number of<br />Your Ingredients</th>
-                        <th>Number of<br />Ingredients<br />in Recipe</th>
                         <th>Add to Favorites</th>
+                        <th>Dislike</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for i in range(0,len) %}
                       <tr>
-                        <td>{{cookableRecipesList[i]['name']}}</td>
+                        <td>{{recipesToRec[i]['name']}}</td>
                         <td>
-                          <img src="{{cookableRecipesList[i]['thumbnail_url']}}" width="250" height="250" />
+                          <img src="{{recipesToRec[i]['thumbnail_url']}}" width="250" height="250" />
                         </td>
-                        <td>{{cookableRecipesList[i]['score']}}%</td>
-                        <td>{{cookableRecipesList[i]['countMatch']}}</td>
-                        <td>{{cookableRecipesList[i]['countTotal']}}</td>
                         <td>
-                            <a href="{{url_for('addfavorite', recipeId=cookableRecipesList[i]['id'])}}">ADD TO FAVORITES</a>
+                            <a href="{{url_for('addfavorite', recipeId=recipesToRec[i]['id'])}}">ADD TO FAVORITES</a>
+                        </td>
+                        <td>
+                            <a href="{{url_for('addDislike', recipeId=recipesToRec[i]['id'])}}">DISLIKE</a>
                         </td>
                       </tr>
                       {% endfor %}
