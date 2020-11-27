@@ -19,7 +19,7 @@
         <tbody>
           {% for item in display %}
           <tr>
-            <td><a href="{{url_for('showRecipeDetails', recipeId=item.id)}}">{{item.name}}</a></td>
+            <td><a href="{{url_for('recipeDetails', recipeId=item.id)}}">{{item.name}}</a></td>
             <td>
               <img href="#" src="{{item.thumbnail_url}}" width="250" height="250" />
             </td>

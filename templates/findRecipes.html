@@ -45,7 +45,7 @@
                         <tr>
                             {% for recipe in recipes %}
                             <td style="text-align: center; padding-left: 20px;">
-                                <a href="{{url_for('showRecipeDetails', recipeId=recipe.id)}}">
+                                <a href="{{url_for('recipeDetails', recipeId=recipe.id)}}">
                                     <img src="{{recipe.thumbnail_url}}"/>
                                 </a>
                             </td>
