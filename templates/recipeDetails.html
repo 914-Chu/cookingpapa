@@ -45,6 +45,7 @@
         <center>
             <div class="container">
                 <h2>{{recipe['name']}}</h2>
+                <a href="{{url_for('addfavorite', recipeId=recipe['id'])}}">Add to Favorites</a>
                 {% if recipe['tags']|length %}
                     <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
                 {% endif %}

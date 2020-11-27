@@ -61,9 +61,9 @@ def findRecipes():
     #print(list(canCookRecipes))
     recipeIds = []
     for dic in list(canCookRecipes):
-        recipeIds.append(int(dic['id']))
+        recipeIds.append(r"recipe:"+str(dic['id']))
     
-    recipeList = list(db.recipes.find( {"id": {"$in": recipeIds} }, {"_id":0, "name":1, "thumbnail_url":1, "id":1} ))
+    recipeList = list(db.recipes.find( {"canonical_id": {"$in": recipeIds} }, {"_id":0, "name":1, "thumbnail_url":1, "id":1} ))
 
     return render_template('findRecipes.html', recipes=recipeList)
 
@@ -383,7 +383,7 @@ def explore():
     else:
         return redirect(url_for('login'))
 
-@app.route("/login/pantry/recipe/<int:recipeId>", methods=['GET', 'POST'])
+@app.route("/login/pantry/recipe/<string:recipeId>", methods=['GET', 'POST'])
 def recipeDetails(recipeId):
     if 'loggedin' in session:
         search = False
@@ -392,11 +392,14 @@ def recipeDetails(recipeId):
             search = True
 
         if not recipeId:
-            recipeId = 6908
+            # TO DO: Do something if the recipeId is null/empty
+            recipeId = str(6908)
+        
+        recipeId = r"recipe:"+recipeId
 
         recipe = list(recipes.aggregate([
-        { "$match": {"id":recipeId} },
-        { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
+        { "$match": {"canonical_id":{'$regex': recipeId}} },
+        { "$project": {"_id":0, "canonical_id":1, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
                         "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
         ]))
         #page, per_page, offset = get_page_args()
