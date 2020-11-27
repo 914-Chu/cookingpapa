@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<HTML lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>CRUD TEST</title>
+    </head>
+    <style>
+          body {
+      background-color: #db9d47;
+      margin: 0;
+      padding: 0;
+      font-family: helvetica;
+    }
+    .header a {
+            margin-top: 5px;
+            margin-left: 5px;  
+        }
+
+    .button {
+      color: black;
+      background-color: transparent;
+      border-color: transparent;
+    }
+    .button:hover {
+      color: #289cd1;
+    }
+    th,td {
+        text-align: center;
+    }   
+    </style>
+    <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+        </div>
+        <center>
+            <div>
+                <h2>Recipes based on your preferences</h2>
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Add to Favorites</th>
+                        <th>Dislike</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in range(0,len) %}
+                      <tr>
+                        <td>{{recipesToRec[i]['name']}}</td>
+                        <td>
+                          <img src="{{recipesToRec[i]['thumbnail_url']}}" width="250" height="250" />
+                        </td>
+                        <td>
+                            <a href="{{url_for('addfavorite', recipeId=recipesToRec[i]['id'])}}">ADD TO FAVORITES</a>
+                        </td>
+                        <td>
+                            <a href="{{url_for('addDislike', recipeId=recipesToRec[i]['id'])}}">DISLIKE</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
+        </center>
+    </body>
+</HTML>

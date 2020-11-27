@@ -42,7 +42,7 @@ def index():
 def frontpage():
     return render_template("frontpage.html",userName=session['userName'])
 
-@app.route("/findRecipes")
+@app.route("/findRecipes", methods=['GET', 'POST'])
 def findRecipes():
     cursor = mysql.connection.cursor()
     query = """SELECT Pantry.ingId
@@ -54,19 +54,81 @@ def findRecipes():
     canCookRecipes = db.recipes.aggregate([
         {"$unwind": "$sections"},
         {"$unwind": "$sections.components"},
-        {"$group": {"_id": "$id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
-        {"$project": {"_id": 0, "id":"$_id", "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
+        {"$group": {"_id": "$_id", "id":{"$first":"$id"}, "name":{"$first":"$name"},"thumbnail_url":{"$first":"$thumbnail_url"}, "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
+        {"$project": {"_id": 1, "id":1,"name":1, "thumbnail_url":1, "countMatch": 1, "countTotal": 1, "score":{"$round":[{"$divide": [{"$multiply":["$countMatch",100]}, "$countTotal"]}, 1]}}},
         {"$sort": {"score": -1}},
-        {"$limit": 5},
+        {"$limit": 20}
         ])
-    #print(list(canCookRecipes))
-    recipeIds = []
-    for dic in list(canCookRecipes):
-        recipeIds.append(r"recipe:"+str(dic['id']))
-    
-    recipeList = list(db.recipes.find( {"canonical_id": {"$in": recipeIds} }, {"_id":0, "name":1, "thumbnail_url":1, "id":1} ))
+    cookableRecipesList = list(canCookRecipes)
+    return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, len=len(cookableRecipesList))
 
-    return render_template('findRecipes.html', recipes=recipeList)
+@app.route("/findRecipesPreferences", methods=['GET', 'POST'])
+def findRecipesPreferences():
+    tagList = ['almond_joy', 'mccormick_seasoned_pro', '3_musketeers', 'vegetarian', 'summer', 'mexican', 'dutch_oven', 'meal_prep', 'baking_cups', 'strainer', 'chop_champ', 'bread_pan', 'tasty_s_5th_birthday_savory', 'tasty_ewd_fifteen', 'tupperware', 'italian', 'mccormick_easy_dinner', 'german', 'pressure_cooker', 'tongs', 'pescatarian', 'one_top_app_steak', 'holiday_treats', 'parchment_paper', 'cooking_kit', 'african', 'rolling_pin', 'snickers', 'game_day', 'chinese', 'korean', 'cupcake_pan', 'snacks', 'food_processor', 'one_top_app_seafood', 'qfp_recipes', 'breakfast', 'gluten_free', 'paper_bowls', 'eko_video', 'hershey_s', 'pie_dish', 'latin_american', 'ice_cream_scoop', 'contains_alcohol', 'tasty_dinner_kits', 'every_occasion', 'bakery_goods', 'dairy_free', 'steam', 'under_30_minutes', 'beyond_red_blend', 'appetizers', 'instant_pot', 'fish_spatula', 'sides', 'caribbean', 'one_top_app_sauces', 'kid_friendly', 'cooling_rack', 'liquid_measuring_cup', 'winter', 'hispanic_heritage_month', 'oh_so_rose', 'one_top_app_dessert', 'epoca_walmart', 'one_top_app_sides', 'grill', 'bake', 'tasty_s_5th_birthday_recipe', 'wok', 'drinks', 'thanksgiving', 'sponsored_recipe', 'date_night', 'licensed_video', 'sauce_pan', 'easter', 'ice_cube_tray', 'pyrex', 'tasty_ewd_tips', 'cutting_board', 'walmart_holiday_bundle', 'lunch', 'spatula', 'wax_paper', 'light_bites', 'best_of_tasty', 'one_top_app_eggs', 'american', 'party', 'fusion', 'thai', 'casual_party', 'offset_spatula', 'greek', 'mccormick_game_day', 'club_house_seasoned_pro', 'spider', 'cheese_grater', 'one_pot_or_pan', 'hand_mixer', 'freezer', 'one_top_friendly', 'desserts', 'paper_napkins', 'saute_pan', 'microplane', 'indian', 'sieve', 'stuffed', 'tasty_s_5th_birthday_sweet', 'tastyjunior', 'peeler', 'baking_kit', 'comfort_food', 'asian_pacific_american_heritage_month', 'colander', 'holiday_cookie_recipe', 'spring', 'paper_plates', 'tasty_ewd_fall', 'healthy', 'tasty_junior_cookbook', 'wooden_spoon', 'one_top_app_grains', 'peppermint_pattie', 'mixing_bowl', 'zipper_storage_bags', 'no_bake_desserts', 'plastic_wrap', 'deep_fry', 'cake_pan', 'vietnamese', 'ice_cream_social', 'fall', 'oven', 'seafood', 'paper_cups', 'holiday_cookie_howto', 'slow_cooker', 'stove_top', 'tasty_ewd_healthy', '5_ingredients_or_less', 'baking_pan', 'lollipop_sticks', 'black_history_month', 'easy', 'broiler', 'plastic_utensils', 'indulgent_sweets', 'qfp_baking', 'fourth_of_july', 'big_batch', 'schwartz_seasoned_pro', 'whisk', 'british', 'cast_iron_pan', 'japanese', 'weeknight', 'valentines_day', 'brunch', 'tasty_cookbook', 'vegan', 'microwave', 'dry_measuring_cups', 'brazilian', 'pizza_kit', 'dinner', 'measuring_spoons', 'special_occasion', 'french', 'one_top_app_meat', 'mashup', 'one_top_app_veggies', 'low_carb', 'happy_hour', 'christmas', 'oven_mitts', 'bbq', 'kitchen_shears', 'blender', 'srsly_sauv_blanc', 'halloween', 'chefs_knife', 'pride_month', 'zipper_freezer_bags', 'middle_eastern', 'pan_fry', 'picnic', 'one_top_app_main_feed']
+    numberList = []
+    for i in range(0, len(tagList)):
+        numberList.append(i)
+    tagDict = {tagList[i]: numberList[i] for i in range(len(tagList))}
+
+    #create user profile
+    userProfile = [0] * len(tagList)
+
+    cursor = mysql.connection.cursor()
+    query = """SELECT Favorites.recipe_id
+                FROM Favorites
+                WHERE Favorites.user_id = {}""".format(session['userId'])
+    cursor.execute(query)
+    result = cursor.fetchall()
+    usersFavorites = [i['recipe_id'] for i in result]
+
+    for recipe_id in usersFavorites:
+        tagResult = recipes.aggregate([
+            {"$match":{"id":recipe_id}},
+            {"$limit":1},
+            {"$unwind":"$tags"},
+            {"$project":{"_id":0, "tags":1}}
+            ])
+        recipeTags = [i['tags']['name'] for i in tagResult] 
+        for tag in recipeTags:
+            if tag in tagList:
+                userProfile[tagDict[tag]] += 1
+
+    cursor = mysql.connection.cursor()
+    query = """SELECT Dislikes.recipe_id
+                FROM Dislikes
+                WHERE Dislikes.user_id = {}""".format(session['userId'])
+    cursor.execute(query)
+    result = cursor.fetchall()
+    usersDislikes = [i['recipe_id'] for i in result]
+
+    for recipe_id in usersDislikes:
+        tagResult = recipes.aggregate([
+            {"$match":{"id":recipe_id}},
+            {"$limit":1},
+            {"$unwind":"$tags"},
+            {"$project":{"_id":0, "tags":1}}
+            ])
+        recipeTags = [i['tags']['name'] for i in tagResult] 
+        for tag in recipeTags:
+            if tag in tagList:
+                userProfile[tagDict[tag]] -= 1
+
+    allRecipes = list(db.recipes.find({"$and":[{"id":{"$nin": usersFavorites}},{"id":{"$nin": usersDislikes}}]},{"_id":0, "id":1, "tags":1}))
+
+    recipeScores = {}                          #key: recipe id, value:score
+    for item in allRecipes:
+        tagArr = [0] * len(tagList)
+        if 'tags' in item.keys():
+            for tag in item['tags']:
+                tagArr[tagDict[tag['name']]] += 1
+            if 'id' in item.keys():
+                recipeScores[item['id']] = sum(i[0] * i[1] for i in zip(tagArr, userProfile))
+
+    recipeIdandScore = sorted(recipeScores.items(), key=lambda x:x[1], reverse=True)
+    recipesIdToRec = [recipeIdandScore[i][0] for i in range(0,20)]
+
+    recipesToRec = list(recipes.find({"id":{"$in": recipesIdToRec}}))
+    return render_template('findRecipesPreferences.html', recipesToRec=recipesToRec, len=len(recipesToRec))
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -126,7 +188,7 @@ def login():
             session['userId'] = account['userId']
             session['userName'] = account['userName']
 
-            return redirect(url_for('frontpage'))
+            return redirect(url_for('home'))
         else:
             msg = "INCORRECT USERNAME OR PASSWORD!"
 
@@ -462,6 +524,31 @@ def addfavorite(recipeId):
             mysql.connection.commit()
             msg = "Add success"
             return redirect(url_for('favorite', msg=msg))
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/pantry/addDislike/<string:recipeId>", methods=['GET', 'POST'])
+def addDislike(recipeId):
+    msg = ""
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        # query = "ALTER TABLE userAccount AUTO_INCREMENT = {}".format(lastId)
+        query = """SELECT *
+                   FROM Dislikes
+                   WHERE user_id = {} 
+                   AND recipe_id = {}""".format(session['userId'], recipeId)
+        cursor.execute(query)
+        output = cursor.fetchall()
+        if len(output) != 0:
+            msg = "Recipe already added"
+            return redirect(url_for('findRecipesPreferences', msg=msg))
+        else:
+            query = """INSERT INTO Dislikes (recipe_id, user_id)
+                       VALUES ({}, {})""".format(recipeId, session['userId'])
+            cursor.execute(query)
+            mysql.connection.commit()
+            msg = "Add success"
+            return redirect(url_for('findRecipesPreferences', msg=msg))
     else:
         return redirect(url_for('login'))
 

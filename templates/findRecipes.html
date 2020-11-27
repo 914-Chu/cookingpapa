@@ -53,6 +53,9 @@
         height: 100px;
         object-fit: cover;
     }
+    th,td {
+        text-align: center;
+    }   
     </style>
     <body>
         <div class = "header">
@@ -62,6 +65,34 @@
         <center>
             <div>
                 <h2>Recipes based on what you have in your pantry</h2>
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Percent<br />Match</th>
+                        <th>Number of<br />Your Ingredients</th>
+                        <th>Number of<br />Ingredients<br />in Recipe</th>
+                        <th>Add to Favorites</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in range(0,len) %}
+                      <tr>
+                        <td>{{cookableRecipesList[i]['name']}}</td>
+                        <td>
+                          <img src="{{cookableRecipesList[i]['thumbnail_url']}}" width="250" height="250" />
+                        </td>
+                        <td>{{cookableRecipesList[i]['score']}}%</td>
+                        <td>{{cookableRecipesList[i]['countMatch']}}</td>
+                        <td>{{cookableRecipesList[i]['countTotal']}}</td>
+                        <td>
+                            <a href="{{url_for('addfavorite', recipeId=cookableRecipesList[i]['id'])}}">ADD TO FAVORITES</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
             </div>
             
             <div class="recommendations">
