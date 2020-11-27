@@ -21,18 +21,16 @@
             font-family: helvetica;
         }
         .header a {
-            font-family: helvetica;
-            font-size: 30px;
             margin-top: 5px;
-            margin-left:5px;
-            color: #d6970f;
-            font-weight: bold;
-            text-decoration: none;
+            margin-left: 5px;  
         }
         .button {
-            color: black;
+            color: #463f3a;
             background-color: transparent;
             border-color: transparent;
+            font-size: 16px;
+            margin-left: 2%;
+            font-weight: bold;
         }
         .button:hover {
             color: #289cd1;
@@ -40,9 +38,9 @@
     </style>
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
-        </div>
-        <a href="{{url_for('home')}}"><button class="button">back</button></a>
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+          </div>
+        <a href="{{url_for('explore')}}"><button class="button">Back</button></a>
         <center>
             <div class="container">
                 <h2>{{recipe['name']}}</h2>

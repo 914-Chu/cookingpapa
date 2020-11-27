@@ -39,7 +39,7 @@ def index():
 
 @app.route("/frontpage")
 def frontpage():
-    return render_template("frontpage.html")
+    return render_template("frontpage.html",userName=session['userName'])
 
 @app.route("/findRecipes")
 def findRecipes():
@@ -119,7 +119,7 @@ def login():
             session['userId'] = account['userId']
             session['userName'] = account['userName']
 
-            return redirect(url_for('pantry'))
+            return redirect(url_for('frontpage'))
         else:
             msg = "INCORRECT USERNAME OR PASSWORD!"
 
@@ -372,7 +372,7 @@ def explore():
         cond = re.compile(r'recipe', re.I)
         display = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset)
+        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
         return render_template('explore.html', display=displaypage, pagination=pagination)
     else:
         return redirect(url_for('login'))
@@ -418,8 +418,8 @@ def favorite():
         page, per_page, offset = get_page_args()
         display = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset)
-        return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg)
+        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
+        return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg, userName=session['userName'])
     else:
         return redirect(url_for('login'))
 
