@@ -53,13 +53,19 @@ def findRecipes():
     canCookRecipes = db.recipes.aggregate([
         {"$unwind": "$sections"},
         {"$unwind": "$sections.components"},
-        {"$group": {"_id": "$_id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
-        {"$project": {"_id": 1, "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
+        {"$group": {"_id": "$id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
+        {"$project": {"_id": 0, "id":"$_id", "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
         {"$sort": {"score": -1}},
         {"$limit": 5},
         ])
-    print(list(canCookRecipes))
-    return render_template('findRecipes.html')
+    #print(list(canCookRecipes))
+    recipeIds = []
+    for dic in list(canCookRecipes):
+        recipeIds.append(r"recipe:"+str(dic['id']))
+    
+    recipeList = list(db.recipes.find( {"canonical_id": {"$in": recipeIds} }, {"_id":0, "name":1, "thumbnail_url":1, "id":1} ))
+
+    return render_template('findRecipes.html', recipes=recipeList)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -378,18 +384,28 @@ def explore():
         return redirect(url_for('login'))
 
 @app.route("/login/pantry/recipe/<string:recipeId>", methods=['GET', 'POST'])
-def recipe(recipeId):
+def recipeDetails(recipeId):
     if 'loggedin' in session:
         search = False
         q = request.args.get('q')
         if q:
             search = True
 
-        page, per_page, offset = get_page_args()
-        display = recipes.find({"id":recipedId}, {"_id":0, "name":1, "thumbnail_url":1, "id":1, "sections":1, "description":1, "instructions":1, "tags":1})
+        if not recipeId:
+            # TO DO: Do something if the recipeId is null/empty
+            recipeId = str(6908)
+        
+        recipeId = r"recipe:"+recipeId
 
-        #TODO CHANGE html page
-        return render_template('explore.html', display=display)
+        recipe = list(recipes.aggregate([
+        { "$match": {"canonical_id":{'$regex': recipeId}} },
+        { "$project": {"_id":0, "canonical_id":1, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
+                        "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
+        ]))
+        #page, per_page, offset = get_page_args()
+        #display = recipes.find({"id":recipedId}, {"_id":0, "name":1, "thumbnail_url":1, "id":1, "sections":1, "description":1, "instructions":1, "tags":1})
+
+        return render_template("recipeDetails.html", recipe=recipe[0])
     else:
         return redirect(url_for('login'))
 
@@ -550,22 +566,3 @@ def delete(userId):
 
     return render_template("delete.html", msg=msg, account=account)
    
-@app.route("/recipeDetails/<int:recipeId>", methods=['GET'])
-def showRecipeDetails(recipeId):
-    if not recipeId:
-        recipeId = 6908
-    
-    '''
-    recipe = list(recipes.aggregate([
-        { "$match": {"id":recipeId} },
-        { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
-                        "component":"$sections.name", "ingredients": "$sections.components.ingredient", "measurements":"$sections.components.measurements", "instructions":1} }
-    ]))
-    '''
-    
-    recipe = list(recipes.aggregate([
-        { "$match": {"id":recipeId} },
-        { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
-                        "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
-    ]))
-    return render_template("recipeDetails.html", recipe=recipe[0])

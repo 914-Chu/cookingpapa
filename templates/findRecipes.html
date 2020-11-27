@@ -45,16 +45,39 @@
       right: 25px;
       font-size: 36px;
       margin-left: 50px;
-  }
+  
+    }
+    .recommendations img {
+        tealign: center;
+        width:  100px;
+        height: 100px;
+        object-fit: cover;
+    }
     </style>
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+            <a href = "{{url_for('home')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
         </div>
         <span style="font-size: 28px; cursor:pointer; position:fixed; right: 30px; top: 0;" onclick="openNav()">&#9776;</span>
         <center>
             <div>
                 <h2>Recipes based on what you have in your pantry</h2>
+            </div>
+            
+            <div class="recommendations">
+                <table>
+                    <tbody>
+                        <tr>
+                            {% for recipe in recipes %}
+                            <td style="text-align: center; padding-left: 20px;">
+                                <a href="{{url_for('recipeDetails', recipeId=recipe.id)}}">
+                                    <img src="{{recipe.thumbnail_url}}"/>
+                                </a>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="url" id="sideNav">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
