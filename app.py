@@ -125,7 +125,7 @@ def login():
             session['userId'] = account['userId']
             session['userName'] = account['userName']
 
-            return redirect(url_for('pantry'))
+            return redirect(url_for('home'))
         else:
             msg = "INCORRECT USERNAME OR PASSWORD!"
 

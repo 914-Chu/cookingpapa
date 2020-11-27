@@ -40,9 +40,8 @@
     </style>
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
+            <a href = "{{url_for('home')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
         </div>
-        <a href="{{url_for('home')}}"><button class="button">back</button></a>
         <center>
             <div class="container">
                 <h2>{{recipe['name']}}</h2>
@@ -50,7 +49,9 @@
                     <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
                 {% endif %}
                 <img class="resize" src="{{ recipe['thumbnail_url'] }}" alt="{{recipe['name']}}" align="right">
-                <p align="left">{{recipe['description']}}</p>
+                {% if recipe['description'] %}
+                    <p align="left">{{recipe['description']}}</p>
+                {% endif %}
                 {% if recipe['total_time_minutes'] %}
                     <p align="left">Total time: {{recipe['total_time_minutes']}} minutes</p>
                 {% endif %}
