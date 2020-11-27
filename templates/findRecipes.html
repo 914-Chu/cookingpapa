@@ -24,6 +24,12 @@
     .button:hover {
       color: #289cd1;
     }
+    .recommendations img {
+        tealign: center;
+        width:  100px;
+        height: 100px;
+        object-fit: cover;
+    }
     </style>
     <body>
         <div class = "header">
@@ -32,6 +38,21 @@
         <center>
             <div>
                 <h2>Recipes based on what you have in your pantry</h2>
+            </div>
+            <div class="recommendations">
+                <table>
+                    <tbody>
+                        <tr>
+                            {% for recipe in recipes %}
+                            <td style="text-align: center; padding-left: 20px;">
+                                <a href="{{url_for('showRecipeDetails', recipeId=recipe.id)}}">
+                                    <img src="{{recipe.thumbnail_url}}"/>
+                                </a>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </center>
     </body>

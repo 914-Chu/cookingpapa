@@ -53,13 +53,19 @@ def findRecipes():
     canCookRecipes = db.recipes.aggregate([
         {"$unwind": "$sections"},
         {"$unwind": "$sections.components"},
-        {"$group": {"_id": "$_id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
-        {"$project": {"_id": 1, "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
+        {"$group": {"_id": "$id", "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
+        {"$project": {"_id": 0, "id":"$_id", "countMatch": 1, "countTotal": 1, "score":{"$divide": ["$countMatch", "$countTotal"]}}},
         {"$sort": {"score": -1}},
         {"$limit": 5},
         ])
-    print(list(canCookRecipes))
-    return render_template('findRecipes.html')
+    #print(list(canCookRecipes))
+    recipeIds = []
+    for dic in list(canCookRecipes):
+        recipeIds.append(int(dic['id']))
+    
+    recipeList = list(db.recipes.find( {"id": {"$in": recipeIds} }, {"_id":0, "name":1, "thumbnail_url":1, "id":1} ))
+
+    return render_template('findRecipes.html', recipes=recipeList)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -562,7 +568,7 @@ def showRecipeDetails(recipeId):
                         "component":"$sections.name", "ingredients": "$sections.components.ingredient", "measurements":"$sections.components.measurements", "instructions":1} }
     ]))
     '''
-    
+
     recipe = list(recipes.aggregate([
         { "$match": {"id":recipeId} },
         { "$project": {"_id":0, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
