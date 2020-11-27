@@ -79,7 +79,7 @@
                 <tbody>
                   {% for item in display %}
                   <tr>
-                    <td><a style="font-weight:bold; color:#463F3a;"href="{{url_for('showRecipeDetails', recipeId=item.id)}}">{{item.name}}</a></td>
+                    <td><a style="font-weight:bold; color:#463F3a;"href="{{url_for('recipeDetails', recipeId=item.id)}}">{{item.name}}</a></td>
                     <td>
                       <img src="{{item.thumbnail_url}}" width="250" height="250" />
                     </td>
