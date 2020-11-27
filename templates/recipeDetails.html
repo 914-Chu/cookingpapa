@@ -15,24 +15,22 @@
             max-height: 50%;
         }
         body {
-            background-color: #ffc543;
+            background-color: #db9d47;
             margin: 0;
             padding: 0;
             font-family: helvetica;
         }
         .header a {
-            font-family: helvetica;
-            font-size: 30px;
             margin-top: 5px;
-            margin-left:5px;
-            color: #d6970f;
-            font-weight: bold;
-            text-decoration: none;
+            margin-left: 5px;  
         }
         .button {
-            color: black;
+            color: #463f3a;
             background-color: transparent;
             border-color: transparent;
+            font-size: 16px;
+            margin-left: 2%;
+            font-weight: bold;
         }
         .button:hover {
             color: #289cd1;
@@ -40,27 +38,47 @@
     </style>
     <body>
         <div class = "header">
-            <a href = "{{url_for('frontpage')}}">cookingpapa</a>
-        </div>
-        <a href="{{url_for('home')}}"><button class="button">back</button></a>
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+          </div>
+        <a href="{{url_for('explore')}}"><button class="button">Back</button></a>
         <center>
             <div class="container">
                 <h2>{{recipe['name']}}</h2>
-                <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
-                <img class="resize" src="{{ recipe['beauty_url'] }}" alt="{{recipe['name']}}" align="right">
-                <p align="left">{{recipe['description']}}</p>
-                <h4 align="left">Ingredients:</h4>
-                <ul align="left">
-                    {% for ingredient in recipe['ingredients'] %}
-                    <li>{{ingredient['name']}}</li>
+                <a href="{{url_for('addfavorite', recipeId=recipe['id'])}}">Add to Favorites</a>
+                {% if recipe['tags']|length %}
+                    <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
+                {% endif %}
+                <img class="resize" src="{{ recipe['thumbnail_url'] }}" alt="{{recipe['name']}}" align="right">
+                {% if recipe['description'] %}
+                    <p align="left">{{recipe['description']}}</p>
+                {% endif %}
+                {% if recipe['total_time_minutes'] %}
+                    <p align="left">Total time: {{recipe['total_time_minutes']}} minutes</p>
+                {% endif %}
+
+                <div class="ingredients">
+                    <h3 align="left">Ingredients:</h3>
+                    <p align="left">Serves {{recipe['num_servings']}}</p>
+                    {% for i in range(recipe['component']|length) %}
+                    {% if recipe['component'][i] != None %} 
+                        <h4 align="left">{{recipe['component'][i]}}</h4> 
+                    {% endif %}
+                    <ul align="left" style="list-style-type:none; padding-left: 0;">
+                        {% for ingredient in recipe['ingredients'][i] %}
+                        <li>{{ingredient['raw_text']}}</li>
+                        {% endfor %}
+                    </ul>
                     {% endfor %}
-                </ul>
-                <h4 align="left">Directions:</h4>
-                <ol>
-                    {% for instruction in recipe['instructions'] %}
-                    <li align="left">{{instruction['display_text']}}</li>
-                    {% endfor %}
-                </ol>
+
+                </div>
+                <div class="directions">
+                    <h3 align="left">Directions:</h3>
+                    <ol align="left">
+                        {% for instruction in recipe['instructions'] %}
+                        <li>{{instruction['display_text']}}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
             </div>
         </center>
     </body>

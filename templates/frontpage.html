@@ -10,19 +10,49 @@
             background-color: #db9d47;
             margin:0 ;
             padding:0;
-
+            font-family: Helvetica;
         }
 
         .header a {
             margin-top: 5px;
             margin-left: 5px;
-    
-            
         }
-        .button {
+         
+        .url {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right:0;
+            background-color: #463F3a;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        .url a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 24px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+        .url a:hover {
+            color: #289cd1;
+        }
+        .url .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+      
+        /*.button {
             background-color:transparent;
             border-color: transparent;
-            color: black;
+            color: #36312d;
             font-weight: bold;
             font-size: medium;
         }
@@ -39,20 +69,20 @@
         } 
         .button:hover {
             color: #289cd1;
-        }
-        .text h1 {
+        }*/
+        .text h1, .text h2 {
             font-family: Helvetica;
-            font-size: 36px;
+            font-size: 30px;
             text-align: left;
             margin-left: 30px;
-            color:#463F3a;
+            color:#36312d;
         }
         .text p {
             font-family: Helvetica;
             font-size: 24px;
             text-align: left;
             margin-left: 30px;
-            color:#463F3a;
+            color:#36312d;
         }
        
       
@@ -64,12 +94,16 @@
         <div class = "header">
             <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
         </div>
+        <span style="font-size: 28px; cursor:pointer; position:fixed; right: 30px; top: 0;" onclick="openNav()">&#9776;</span>
         <center>
+
         <div class="text">
-            <!--<h1 style= "font-family: Helvetica;">COOKINGPAPA!</h1>-->
-            <h1>All your Ingredients in One Place</h1>
+            {% if userName %}
+            <h1 style="font-size:36px;">Welcome {{userName}}!</h1>
+             {% endif %}
+            <h2>All your Ingredients in One Place</h1>
             <p>CookingPapa's Pantry feature tracks your ingredients (:</p>
-            <h1>Recipes FOR YOU</h1>
+            <h2>Recipes FOR YOU</h1>
             <p>We'll give you recipes based on your available ingredients</p>
                  <p style="padding:-5px;">and personal preferences</p> 
             <p>A world of possibilities starting with you and your pantry!!</p>
@@ -78,11 +112,24 @@
             <img style="position: fixed; top:100px; right:0px;" class="cookingpapaimage" src= "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/papa_meuak5.png" alt="cookingpapa">
         </div>
       
-        <div class="url">
-            <a href="{{url_for('login')}}"><button class="button button1">LOGIN</button></a>
-            <a href="{{url_for('register')}}"><button class="button button2">SIGN UP</button></a>
+        <div class="url" id="sideNav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a style="right: 210px;" href="{{url_for('pantry')}}">Pantry</a>
+            <a style="right: 180px;" href="{{url_for('explore')}}">Explore</a>
+            <a href="{{url_for('findRecipes')}}">Recipies for You</a>
+            <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
+            <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
+
         </div>
+        <script>
+            function openNav() {
+              document.getElementById("sideNav").style.width = "200px";
+            }
     
+            function closeNav() { 
+              document.getElementById("sideNav").style.width = "0";
+            }   
+          </script>
         </center>
     </body>
 </html>

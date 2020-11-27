@@ -39,7 +39,7 @@ def index():
 
 @app.route("/frontpage")
 def frontpage():
-    return render_template("frontpage.html")
+    return render_template("frontpage.html",userName=session['userName'])
 
 @app.route("/findRecipes", methods=['GET', 'POST'])
 def findRecipes():
@@ -440,24 +440,34 @@ def explore():
         cond = re.compile(r'recipe', re.I)
         display = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset)
+        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
         return render_template('explore.html', display=displaypage, pagination=pagination)
     else:
         return redirect(url_for('login'))
 
 @app.route("/login/pantry/recipe/<string:recipeId>", methods=['GET', 'POST'])
-def recipe(recipeId):
+def recipeDetails(recipeId):
     if 'loggedin' in session:
         search = False
         q = request.args.get('q')
         if q:
             search = True
 
-        page, per_page, offset = get_page_args()
-        display = recipes.find({"id":recipedId}, {"_id":0, "name":1, "thumbnail_url":1, "id":1, "sections":1, "description":1, "instructions":1, "tags":1})
+        if not recipeId:
+            # TO DO: Do something if the recipeId is null/empty
+            recipeId = str(6908)
+        
+        recipeId = r"recipe:"+recipeId
 
-        #TODO CHANGE html page
-        return render_template('explore.html', display=display)
+        recipe = list(recipes.aggregate([
+        { "$match": {"canonical_id":{'$regex': recipeId}} },
+        { "$project": {"_id":0, "canonical_id":1, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
+                        "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
+        ]))
+        #page, per_page, offset = get_page_args()
+        #display = recipes.find({"id":recipedId}, {"_id":0, "name":1, "thumbnail_url":1, "id":1, "sections":1, "description":1, "instructions":1, "tags":1})
+
+        return render_template("recipeDetails.html", recipe=recipe[0])
     else:
         return redirect(url_for('login'))
 
@@ -486,8 +496,8 @@ def favorite():
         page, per_page, offset = get_page_args()
         display = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset)
-        return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg)
+        pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
+        return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg, userName=session['userName'])
     else:
         return redirect(url_for('login'))
 
@@ -643,13 +653,3 @@ def delete(userId):
 
     return render_template("delete.html", msg=msg, account=account)
    
-@app.route("/recipeDetails", methods=['GET'])
-def showRecipeDetails():
-    recipe = {}
-    recipe['name'] = 'Skinny Oatmeal'
-    recipe['beauty_url'] = 'https://www.eatyourselfskinny.com/wp-content/uploads/2016/01/blueberry-oatmeal-33.jpg'
-    recipe['tags'] = [{'type':'Lifestyle','display_name':'Weight loss'},{'type':'Dietary','display_name':'Vegan'}]
-    recipe['description'] = 'Whether you are getting in shape during quarantine or just plain bored, Skinny Oatmeal is the perfect breakfast food to kick start your metabolism'
-    recipe['ingredients'] = [{'name':'Old fashioned rolled oats','quantity':'0.5 cup'},{'name':'Almond milk', 'quantity':'1 cup'},{'name':'Bananas', 'quantity':'0.5'}]
-    recipe['instructions'] = [{'display_text':'Heat almond milk on stove top to boiling point'},{'display_text':'Turn heat down to simmer and add the oats'},{'display_text':'When oats turn fluffy, add mashed banana'},{'display_text':'Remove into a bowl and serve immediately.'}]
-    return render_template("recipeDetails.html", recipe=recipe)

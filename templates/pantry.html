@@ -1,52 +1,9 @@
-<!-- <!DOCTYPE html>
-
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>CRUD TEST</title>
-    </head>    
-    <body>
-        <center>
-            <h2>PANTRY</h2>
-            <h3>USER NAME: {{userName}}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ingredient Name</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Purchase Date</th>
-                        <th>Expiration Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in output %}
-                    <tr>
-                      <td>{{item['name']}}</td>   
-                      <td>{{item['qty']}}</td> 
-                      <td>{{item['unit']}}</td> 
-                      <td>{{item['pdate']}}</td> 
-                      <td>{{item['edate']}}</td> 
-                      <td><a href="{{url_for('updatePantry', item=item)}}"><button></button>UPDATE</button></a></td>
-                      <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button>DELETE</button></a></td>
-                    </tr>    
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                <a href="{{url_for('home')}}"><button>HOME</button></a>
-                <a href="{{url_for('pantryadd')}}"><button>ADD</button></a>
-                <a href="{{url_for('logout')}}"><button>LOGOUT</button></a>
-            </div>
-        </center>
-    </body>
-</html> -->
 <!DOCTYPE html>
 
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Pantry</title>
+    <title style="font-weight: bold;">Pantry</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -63,7 +20,7 @@
       margin: 0;
       padding: 0;
       font-family: helvetica;
-      color: #463F3a
+      color: #463f3a;
       /*border-top: 30px solid #ccc; */
 
     }
@@ -72,15 +29,48 @@
         margin-left: 5px; 
     }
     .url a, .url a:visited {
+      float: left;
       text-decoration: none;
       font-weight: bold;
-      position: fixed;
-      top: 10px;
-      color: black;
+      position: relative;
+      
+      color: #36312d;
+      font-size: 16px;
     }
-    .url a:hover {
+    .url a:hover, .sideNav:hover {
       color: #289cd1;
     }
+    .sideNav {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      right:0;
+      background-color: #463F3a;
+      overflow-x: hidden;
+      transition: 0.5s;
+      padding-top: 60px;
+     }
+    .sideNav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 24px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+    .sideNav a:hover {
+      color: #289cd1;
+    }
+    .sideNav .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+  
     .button {
       border-radius: 5px;
       background-color:transparent;
@@ -96,44 +86,65 @@
   </style>
   <body>
     <div class = "header">
-      <a href = "{{url_for('home')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+      <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
   </div>
+  <span style="font-size: 28px; cursor:pointer; position:fixed; right: 30px; top: 0;" onclick="openNav()">&#9776;</span>
+  
     <center>
-      <h2>PANTRY</h2>
+      <h2 style="font-weight: bold;">PANTRY</h2>
       <h3>User Name: {{userName}}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Ingredient Name</th>
-            <th>Unit</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in output %}
-          <tr>
-            <td>{{item['name']}}</td>
-            <td>{{item['unit']}}</td>
-            <td>{{item['qty']}}</td>
-            <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
-            <td>
-              <a
-                href="{{url_for('deletePantry', item=item)}}"
-                onclick="return confirm('Are you sure for the deletion?')"
-                ><button class="button">Delete</button></a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
       <div class ="url">
-        <!--<a href="{{url_for('home')}}">HOME</a>-->
-        <a style="right: 230px;" href="{{url_for('pantryadd')}}">Add</a>
-        <a style="right: 110px;" href="{{url_for('checkDate')}}">Check Expiry</a>
-        <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
-        <a href="{{url_for('explore')}}">Explore</a>
-        <a href="{{url_for('favorite')}}">Favorite</a>
+        <a style="left:42%; top: 7%;" href="{{url_for('pantryadd')}}">Add</a>
+        <a style="left: 47%; top: 7%;" href="{{url_for('checkDate')}}">Check Expiry</a>
       </div>
+      <form method="post">
+        <div class="container pt-4">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Ingredient Name</th>
+                  <th>Unit</th>
+                  <th>Quantity</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in output %}
+                <tr>
+                  <td>{{item['name']}}</td>
+                  <td>{{item['unit']}}</td>
+                  <td>{{item['qty']}}</td>
+                  <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
+                  <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button class="button">Delete</button></a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+     </form>
+      
+      <div class="sideNav" id="sideNav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{{url_for('frontpage')}}">Home</a>
+        <a style="right: 180px;" href="{{url_for('explore')}}">Explore</a>
+        <a href="{{url_for('findRecipes')}}">Recipies for You</a>
+        <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
+         <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
+      </div>
+      <script>
+        function openNav() {
+          document.getElementById("sideNav").style.width = "200px";
+        }
+
+        function closeNav() { 
+          document.getElementById("sideNav").style.width = "0";
+        }   
+      </script>
+      
+      
     </center>
   </body>
 </html>
