@@ -211,7 +211,7 @@ def home():
         return redirect(url_for('login'))
 
 
-@app.route("/login/pantry")
+@app.route("/login/pantry", methods=['GET','POST'])
 def pantry():
     if 'loggedin' in session:
         # Below function call to replace line 102-108
