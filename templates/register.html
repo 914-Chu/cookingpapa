@@ -30,8 +30,9 @@
         }
 
         .REGISTER {
-            margin-left: 120vh;
-            margin-top: 110px;
+            position: relative;
+            top: 110px;
+            left: 55vh;
             font-family: Helvetica;
             width: 250px;
             height: auto;
@@ -65,7 +66,7 @@
             font-size: 14px;
             color: white;
         }
-        .REGISTER input[type="text"] {
+        .REGISTER input[type="text"], input[type="password"] {
             border: none;
             border-bottom: 1px solid white;
             background: transparent;
@@ -105,7 +106,9 @@
             color: #289cd1;
         }
         .msg {
-            color: red;
+            color: white;
+            font-family: helvetica;
+            font-weight: bold;
             font-size: 20px;
         }
 
@@ -126,7 +129,7 @@
                 <input type="text" name="userName" placeholder = "Enter User Name" id="userName" required>
                 <!-- <label for="pwd">Password:</label>-->
                 <p> Password</p>
-                <input type="text" name="pwd" placeholder = "Enter Password" id="pwd" required>
+                <input type="password" name="pwd" placeholder = "Enter Password" id="pwd" required>
                 <input type="submit" value="Register">
                 
             </form> 

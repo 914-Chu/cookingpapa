@@ -10,7 +10,8 @@ import json
 import datetime
 from collections import OrderedDict
 
-client = MongoClient("mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE")
+#client = MongoClient('mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
+client = MongoClient("mongodb://cookingpapaAdmin:cookingpapa@cluster0-shard-00-00.amfe5.mongodb.net:27017,cluster0-shard-00-01.amfe5.mongodb.net:27017,cluster0-shard-00-02.amfe5.mongodb.net:27017/cookingpapa?ssl=true&replicaSet=atlas-mz3djj-shard-0&authSource=admin&retryWrites=true&w=majority")
 db = client.cookingpapa
 #serverStatusResult=db.command("serverStatus")
 #print(serverStatusResult)
@@ -61,7 +62,7 @@ def findRecipes():
         {"$limit": 20}
         ])
     cookableRecipesList = list(canCookRecipes)
-    return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, len=len(cookableRecipesList))
+    return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, len=len(cookableRecipesList), partition=4)
 
 @app.route("/findRecipesPreferences", methods=['GET', 'POST'])
 def findRecipesPreferences():
@@ -130,7 +131,7 @@ def findRecipesPreferences():
     recipesIdToRec = [recipeIdandScore[i][0] for i in range(0,20)]
 
     recipesToRec = list(recipes.find({"id":{"$in": recipesIdToRec}}))
-    return render_template('findRecipesPreferences.html', recipesToRec=recipesToRec, len=len(recipesToRec))
+    return render_template('findRecipesPreferences.html', recipesToRec=recipesToRec, len=len(recipesToRec), partition=4)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -190,7 +191,7 @@ def login():
             session['userId'] = account['userId']
             session['userName'] = account['userName']
 
-            return redirect(url_for('home'))
+            return redirect(url_for('frontpage'))
         else:
             msg = "INCORRECT USERNAME OR PASSWORD!"
 
@@ -217,28 +218,14 @@ def home():
 @app.route("/login/pantry")
 def pantry():
     if 'loggedin' in session:
-        '''cursor = mysql.connection.cursor()
-        # query = "ALTER TABLE userAccount AUTO_INCREMENT = {}".format(lastId)
-        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
-                          FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
-                          WHERE Pantry.userId = {}""".format(session['userId'])
-        cursor.execute(query)
-        output = cursor.fetchall()'''
         # Below function call to replace line 102-108
         return prettyPantryDescription()  # ADVANCED SQL QUERY #1
-        '''return render_template('pantry.html', userName = session['userName'], output=output)'''
     else:
         return redirect(url_for('login'))
 
-# ADVANCED SQL QUERY #1
-# NOTES: Use stored procedures to convert units to standardized units so no conversion
-# Need to be called by pantry()
-# parameter pantryRecords
-
-
 def prettyPantryDescription():
     cursor = mysql.connection.cursor()
-    query = """SELECT Ingredient.name AS name, Pantry.unit AS unit, SUM(Pantry.qty) AS qty
+    query = """SELECT Ingredient.name AS name, Pantry.unit AS unit, SUM(Pantry.qty) AS qty, Ingredient.ingId AS ingId
                             FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                             WHERE Pantry.userId = {}
                             GROUP BY Ingredient.name, Pantry.unit
@@ -247,6 +234,20 @@ def prettyPantryDescription():
     output = cursor.fetchall()
     return render_template('pantry.html', userName=session['userName'], output=output)
 
+@app.route("/login/pantry/individual/<string:ingId>", methods=['GET', 'POST'])
+def individual(ingId):
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
+                   FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
+                   WHERE Pantry.userId = {}
+                   AND Pantry.ingId = {}""".format(session['userId'], ingId)
+        cursor.execute(query)
+        output = cursor.fetchall()
+
+        return render_template('individual.html', output=output)
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/login/pantry/add", methods=['GET', 'POST'])
 def pantryadd():
@@ -320,6 +321,7 @@ def pantryadd():
 
 @app.route("/login/pantry/update/<item>", methods=['GET', 'POST'])
 def updatePantry(item):
+    print("updatePantry")
     p = re.compile('(?<!\\\\)\'')
     item = p.sub('\"', item)
     itemdict = json.loads(re.sub(r'datetime\.date\(([^)]*)\)', r'[\1]', item))
@@ -448,6 +450,32 @@ def explore():
     else:
         return redirect(url_for('login'))
 
+@app.route("/login/pantry/search", methods=['GET', 'POST'])
+def search():
+    rid = ''
+    if 'loggedin' in session:
+        search = False
+        q = request.args.get('q')
+        if q:
+            search = True
+
+        page, per_page, offset = get_page_args()
+        cond = re.compile(r'recipe', re.I)
+        recipeList = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+        #print(request.form['recipe'])
+        if request.method == 'POST' and 'recipe' in request.form:
+             rid = recipes.find_one({"name":request.form['recipe']}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+             #print(rid)
+             if rid:
+                 #print(rid)
+                 #print(type(rid["id"]))
+                 return redirect(url_for('recipeDetails', recipeId=rid['id']))
+        #displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
+        #pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
+        return render_template('search.html', recipeList=recipeList)
+    else:
+        return redirect(url_for('login'))
+
 @app.route("/login/pantry/recipe/<string:recipeId>", methods=['GET', 'POST'])
 def recipeDetails(recipeId):
     if 'loggedin' in session:
@@ -461,6 +489,10 @@ def recipeDetails(recipeId):
             recipeId = str(6908)
         
         recipeId = r"recipe:"+recipeId
+
+        # TO DO: 
+        #   1. Run mySQL to get pantry ingId's, store into a list
+        #   2. Check whether ingredients in recipe match the ingredients in pantry
 
         recipe = list(recipes.aggregate([
         { "$match": {"canonical_id":{'$regex': recipeId}} },
@@ -486,8 +518,9 @@ def favorite():
         output = cursor.fetchall()
         res = []
         for x in output:
-            # s = "recipe:" + str(x.get('recipe_id'))
-            res.append(x.get('recipe_id'))
+            s = "recipe:" + str(x.get('recipe_id'))
+            #res.append(x.get('recipe_id'))
+            res.append(s)
         
         print(res)
 
@@ -497,8 +530,8 @@ def favorite():
             search = True
 
         page, per_page, offset = get_page_args()
-        display = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-        displaypage = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
+        display = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+        displaypage = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
         return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg, userName=session['userName'])
     else:
@@ -518,7 +551,7 @@ def addfavorite(recipeId):
         output = cursor.fetchall()
         if len(output) != 0:
             msg = "Recipe already added"
-            return redirect(url_for('favorite', msg=msg))
+            return redirect(url_for('explore', msg=msg))
         else:
             query = """INSERT INTO Favorites (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
