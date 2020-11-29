@@ -95,17 +95,7 @@
         </div>
         <span style="font-size: 28px; cursor:pointer; position:fixed; right: 30px; top: 0;" onclick="openNav()">&#9776;</span>
         <center>
-            <div class="carousel-inner">
-                {% for i in range(0, len) %}
-                    <div class="item {% if forloop.counter == 1 %}active{% endif %}" id="slide{{ forloop.counter }}">
-                        <img src="{{cookableRecipesList[i]['thumbnail_url']}}" width="250" height="250" />
-                        <div class="carousel-caption">
-                            <h4>{{cookableRecipesList[i]['name']}}</h4>
-                            <p>{{cookableRecipesList[i]['score']}}%</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            
             <!--<div>
                 <h2>Recipes based on what you have in your pantry</h2>
                 <table>
