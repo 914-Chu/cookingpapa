@@ -484,8 +484,9 @@ def favorite():
         output = cursor.fetchall()
         res = []
         for x in output:
-            # s = "recipe:" + str(x.get('recipe_id'))
-            res.append(x.get('recipe_id'))
+            s = "recipe:" + str(x.get('recipe_id'))
+            #res.append(x.get('recipe_id'))
+            res.append(s)
         
         print(res)
 
@@ -495,8 +496,8 @@ def favorite():
             search = True
 
         page, per_page, offset = get_page_args()
-        display = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-        displaypage = recipes.find({"id":{'$in': res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
+        display = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+        displaypage = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
         return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg, userName=session['userName'])
     else:
