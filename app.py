@@ -236,7 +236,7 @@ def pantry():
 
 def prettyPantryDescription():
     cursor = mysql.connection.cursor()
-    query = """SELECT Ingredient.name AS name, Pantry.unit AS unit, SUM(Pantry.qty) AS qty
+    query = """SELECT Ingredient.name AS name, Pantry.unit AS unit, SUM(Pantry.qty) AS qty, Ingredient.ingId AS ingId
                             FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                             WHERE Pantry.userId = {}
                             GROUP BY Ingredient.name, Pantry.unit
@@ -245,6 +245,20 @@ def prettyPantryDescription():
     output = cursor.fetchall()
     return render_template('pantry.html', userName=session['userName'], output=output)
 
+@app.route("/login/pantry/individual/<string:ingId>", methods=['GET', 'POST'])
+def individual(ingId):
+    if 'loggedin' in session:
+        cursor = mysql.connection.cursor()
+        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
+                   FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
+                   WHERE Pantry.userId = {}
+                   AND Pantry.ingId = {}""".format(session['userId'], ingId)
+        cursor.execute(query)
+        output = cursor.fetchall()
+
+        return render_template('individual.html', output=output)
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/login/pantry/add", methods=['GET', 'POST'])
 def pantryadd():
@@ -318,6 +332,7 @@ def pantryadd():
 
 @app.route("/login/pantry/update/<item>", methods=['GET', 'POST'])
 def updatePantry(item):
+    print("updatePantry")
     p = re.compile('(?<!\\\\)\'')
     item = p.sub('\"', item)
     itemdict = json.loads(re.sub(r'datetime\.date\(([^)]*)\)', r'[\1]', item))
@@ -443,6 +458,32 @@ def explore():
         displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
         return render_template('explore.html', display=displaypage, pagination=pagination)
+    else:
+        return redirect(url_for('login'))
+
+@app.route("/login/pantry/search", methods=['GET', 'POST'])
+def search():
+    rid = ''
+    if 'loggedin' in session:
+        search = False
+        q = request.args.get('q')
+        if q:
+            search = True
+
+        page, per_page, offset = get_page_args()
+        cond = re.compile(r'recipe', re.I)
+        recipeList = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+        #print(request.form['recipe'])
+        if request.method == 'POST' and 'recipe' in request.form:
+             rid = recipes.find_one({"name":request.form['recipe']}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+             #print(rid)
+             if rid:
+                 #print(rid)
+                 #print(type(rid["id"]))
+                 return redirect(url_for('recipeDetails', recipeId=rid['id']))
+        #displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
+        #pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
+        return render_template('search.html', recipeList=recipeList)
     else:
         return redirect(url_for('login'))
 
