@@ -69,8 +69,9 @@ Now, open your default browser and go to the our landing page <em>http://127.0.0
   git pull
   
  ````
+  
+ ````
   git push origin master
  ````
-  
 </p>
 
