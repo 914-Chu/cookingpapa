@@ -41,8 +41,8 @@ def index():
 def frontpage():
     return render_template("frontpage.html",userName=session['userName'])
 
-@app.route("/findRecipes", methods=['GET', 'POST'])
-def findRecipes():
+#@app.route("/findRecipes", methods=['GET', 'POST'])
+def findRecipesPantry():
     cursor = mysql.connection.cursor()
     query = """SELECT Pantry.ingId
                 FROM Pantry
@@ -59,9 +59,16 @@ def findRecipes():
         {"$limit": 20}
         ])
     cookableRecipesList = list(canCookRecipes)
-    return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, len=len(cookableRecipesList), partition=4)
+    return cookableRecipesList
 
-@app.route("/findRecipesPreferences", methods=['GET', 'POST'])
+    #return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, len=len(cookableRecipesList), partition=4)
+@app.route("/findRecipes", methods=['GET', 'POST'])
+def findRecipes():
+    cookableRecipesList = findRecipesPantry()
+    recipesToRec = findRecipesPreferences()
+    return render_template('findRecipes.html', cookableRecipesList=cookableRecipesList, recipesToRec=recipesToRec, len1=len(cookableRecipesList), len2=len(recipesToRec), partition=4)
+#@app.route("/findRecipesPreferences", methods=['GET', 'POST'])
+
 def findRecipesPreferences():
     tagList = ['almond_joy', 'mccormick_seasoned_pro', '3_musketeers', 'vegetarian', 'summer', 'mexican', 'dutch_oven', 'meal_prep', 'baking_cups', 'strainer', 'chop_champ', 'bread_pan', 'tasty_s_5th_birthday_savory', 'tasty_ewd_fifteen', 'tupperware', 'italian', 'mccormick_easy_dinner', 'german', 'pressure_cooker', 'tongs', 'pescatarian', 'one_top_app_steak', 'holiday_treats', 'parchment_paper', 'cooking_kit', 'african', 'rolling_pin', 'snickers', 'game_day', 'chinese', 'korean', 'cupcake_pan', 'snacks', 'food_processor', 'one_top_app_seafood', 'qfp_recipes', 'breakfast', 'gluten_free', 'paper_bowls', 'eko_video', 'hershey_s', 'pie_dish', 'latin_american', 'ice_cream_scoop', 'contains_alcohol', 'tasty_dinner_kits', 'every_occasion', 'bakery_goods', 'dairy_free', 'steam', 'under_30_minutes', 'beyond_red_blend', 'appetizers', 'instant_pot', 'fish_spatula', 'sides', 'caribbean', 'one_top_app_sauces', 'kid_friendly', 'cooling_rack', 'liquid_measuring_cup', 'winter', 'hispanic_heritage_month', 'oh_so_rose', 'one_top_app_dessert', 'epoca_walmart', 'one_top_app_sides', 'grill', 'bake', 'tasty_s_5th_birthday_recipe', 'wok', 'drinks', 'thanksgiving', 'sponsored_recipe', 'date_night', 'licensed_video', 'sauce_pan', 'easter', 'ice_cube_tray', 'pyrex', 'tasty_ewd_tips', 'cutting_board', 'walmart_holiday_bundle', 'lunch', 'spatula', 'wax_paper', 'light_bites', 'best_of_tasty', 'one_top_app_eggs', 'american', 'party', 'fusion', 'thai', 'casual_party', 'offset_spatula', 'greek', 'mccormick_game_day', 'club_house_seasoned_pro', 'spider', 'cheese_grater', 'one_pot_or_pan', 'hand_mixer', 'freezer', 'one_top_friendly', 'desserts', 'paper_napkins', 'saute_pan', 'microplane', 'indian', 'sieve', 'stuffed', 'tasty_s_5th_birthday_sweet', 'tastyjunior', 'peeler', 'baking_kit', 'comfort_food', 'asian_pacific_american_heritage_month', 'colander', 'holiday_cookie_recipe', 'spring', 'paper_plates', 'tasty_ewd_fall', 'healthy', 'tasty_junior_cookbook', 'wooden_spoon', 'one_top_app_grains', 'peppermint_pattie', 'mixing_bowl', 'zipper_storage_bags', 'no_bake_desserts', 'plastic_wrap', 'deep_fry', 'cake_pan', 'vietnamese', 'ice_cream_social', 'fall', 'oven', 'seafood', 'paper_cups', 'holiday_cookie_howto', 'slow_cooker', 'stove_top', 'tasty_ewd_healthy', '5_ingredients_or_less', 'baking_pan', 'lollipop_sticks', 'black_history_month', 'easy', 'broiler', 'plastic_utensils', 'indulgent_sweets', 'qfp_baking', 'fourth_of_july', 'big_batch', 'schwartz_seasoned_pro', 'whisk', 'british', 'cast_iron_pan', 'japanese', 'weeknight', 'valentines_day', 'brunch', 'tasty_cookbook', 'vegan', 'microwave', 'dry_measuring_cups', 'brazilian', 'pizza_kit', 'dinner', 'measuring_spoons', 'special_occasion', 'french', 'one_top_app_meat', 'mashup', 'one_top_app_veggies', 'low_carb', 'happy_hour', 'christmas', 'oven_mitts', 'bbq', 'kitchen_shears', 'blender', 'srsly_sauv_blanc', 'halloween', 'chefs_knife', 'pride_month', 'zipper_freezer_bags', 'middle_eastern', 'pan_fry', 'picnic', 'one_top_app_main_feed']
     numberList = []
@@ -127,7 +134,8 @@ def findRecipesPreferences():
     recipesIdToRec = [recipeIdandScore[i][0] for i in range(0,20)]
 
     recipesToRec = list(recipes.find({"id":{"$in": recipesIdToRec}}))
-    return render_template('findRecipesPreferences.html', recipesToRec=recipesToRec, len=len(recipesToRec), partition=4)
+    return recipesToRec
+    #return render_template('findRecipesPreferences.html', recipesToRec=recipesToRec, len=len(recipesToRec), partition=4)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -530,14 +538,14 @@ def addDislike(recipeId):
         output = cursor.fetchall()
         if len(output) != 0:
             msg = "Recipe already added"
-            return redirect(url_for('findRecipesPreferences', msg=msg))
+            return redirect(url_for('findRecipes', msg=msg))
         else:
             query = """INSERT INTO Dislikes (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
             cursor.execute(query)
             mysql.connection.commit()
             msg = "Add success"
-            return redirect(url_for('findRecipesPreferences', msg=msg))
+            return redirect(url_for('findRecipes', msg=msg))
     else:
         return redirect(url_for('login'))
 
