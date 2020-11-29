@@ -52,10 +52,10 @@
                           <img src="{{recipesToRec[i]['thumbnail_url']}}" width="250" height="250" />
                         </td>
                         <td>
-                            <a href="{{url_for('addfavorite', recipeId=recipesToRec[i]['id'])}}">ADD TO FAVORITES</a>
+                            <a href="{{url_for('addfavorite', recipeId=recipesToRec[i]['id'])}}">Add</a>
                         </td>
                         <td>
-                            <a href="{{url_for('addDislike', recipeId=recipesToRec[i]['id'])}}">DISLIKE</a>
+                            <a href="{{url_for('addDislike', recipeId=recipesToRec[i]['id'])}}">Dislike</a>
                         </td>
                       </tr>
                       {% endfor %}

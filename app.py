@@ -187,7 +187,7 @@ def login():
             session['userId'] = account['userId']
             session['userName'] = account['userName']
 
-            return redirect(url_for('home'))
+            return redirect(url_for('frontpage'))
         else:
             msg = "INCORRECT USERNAME OR PASSWORD!"
 
@@ -515,7 +515,7 @@ def addfavorite(recipeId):
         output = cursor.fetchall()
         if len(output) != 0:
             msg = "Recipe already added"
-            return redirect(url_for('favorite', msg=msg))
+            return redirect(url_for('explore', msg=msg))
         else:
             query = """INSERT INTO Favorites (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
