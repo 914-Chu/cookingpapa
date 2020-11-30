@@ -50,8 +50,10 @@ def findRecipes():
                 WHERE Pantry.userId = {}""".format(session['userId'])
     cursor.execute(query)
     result = cursor.fetchall()
+    cond = re.compile(r'recipe', re.I)
     usersIngredients = [i['ingId'] for i in result]     #list of ingredient ids that the user has
     canCookRecipes = db.recipes.aggregate([
+        {"$match":{"canonical_id": {"$regex": cond}}},
         {"$unwind": "$sections"},
         {"$unwind": "$sections.components"},
         {"$group": {"_id": "$_id", "id":{"$first":"$id"}, "name":{"$first":"$name"},"thumbnail_url":{"$first":"$thumbnail_url"}, "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
@@ -113,7 +115,8 @@ def findRecipesPreferences():
             if tag in tagList:
                 userProfile[tagDict[tag]] -= 1
 
-    allRecipes = list(db.recipes.find({"$and":[{"id":{"$nin": usersFavorites}},{"id":{"$nin": usersDislikes}}]},{"_id":0, "id":1, "tags":1}))
+    cond = re.compile(r'recipe', re.I)
+    allRecipes = list(db.recipes.find({"$and":[{"canonical_id":{"$regex":cond}},{"id":{"$nin": usersFavorites}},{"id":{"$nin": usersDislikes}}]},{"_id":0, "id":1, "tags":1}))
 
     recipeScores = {}                          #key: recipe id, value:score
     for item in allRecipes:
@@ -443,33 +446,12 @@ def explore():
         display = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
-        return render_template('explore.html', display=displaypage, pagination=pagination)
-    else:
-        return redirect(url_for('login'))
-
-@app.route("/login/pantry/search", methods=['GET', 'POST'])
-def search():
-    rid = ''
-    if 'loggedin' in session:
-        search = False
-        q = request.args.get('q')
-        if q:
-            search = True
-
-        page, per_page, offset = get_page_args()
-        cond = re.compile(r'recipe', re.I)
-        recipeList = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-        #print(request.form['recipe'])
+        
         if request.method == 'POST' and 'recipe' in request.form:
              rid = recipes.find_one({"name":request.form['recipe']}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-             #print(rid)
              if rid:
-                 #print(rid)
-                 #print(type(rid["id"]))
                  return redirect(url_for('recipeDetails', recipeId=rid['id']))
-        #displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        #pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
-        return render_template('search.html', recipeList=recipeList)
+        return render_template('explore.html', display=displaypage, pagination=pagination, recipeList=display)
     else:
         return redirect(url_for('login'))
 
