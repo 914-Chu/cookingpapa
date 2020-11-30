@@ -96,14 +96,13 @@
             </div>
           </div>
         </form>
-      <div class="url" id="sideNav">
+      <div class="url" id="sideNav" style="z-index: 999;">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a style="right: 180px;" href="{{url_for('frontpage')}}">Home</a>
-        <a style="right: 210px;" href="{{url_for('pantry')}}">Pantry</a>
-        <a style="right: 180px;" href="{{url_for('explore')}}">Explore</a>
-        <a href="{{url_for('findRecipes')}}">Recipes for You</a>
-        
-        <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
+        <a href="{{url_for('frontpage')}}">Home</a>
+        <a style="right: 180px;" href="{{url_for('pantry')}}">Pantry</a>
+        <a href="{{url_for('explore')}}">Explore</a>
+        <a href="{{url_for('findRecipes')}}">Recipies for You</a>
+        <a style="color: #289cd1;" style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
         <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
       </div>
       <script>

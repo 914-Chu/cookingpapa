@@ -55,7 +55,7 @@
     .sideNav a {
       padding: 8px 8px 8px 32px;
       text-decoration: none;
-      font-size: 20px;
+      font-size: 24px;
       color: white;
       display: block;
       transition: 0.3s;
@@ -106,16 +106,22 @@
                   <th>Ingredient Name</th>
                   <th>Unit</th>
                   <th>Quantity</th>
-                  <!-- <th>Update</th>
-                  <th>Delete</th> -->
+                  <th>Purchase Date</th>
+                  <th>Expired Date</th>
+                  <th>Update</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {% for item in output %}
                 <tr>
-                  <td><a href="{{url_for('individual', ingId=item['ingId'])}}">{{item['name']}}</a></td>
+                  <td>{{item['name']}}</td>
                   <td>{{item['unit']}}</td>
                   <td>{{item['qty']}}</td>
+                  <td>{{item['pdate']}}</td>
+                  <td>{{item['edate']}}</td>
+                  <td><a href="{{url_for('updatePantry', item=item)}}">UPDATE</a></td>
+                  <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
                   <!-- <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
                   <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button class="button">Delete</button></a></td> -->
                 </tr>
@@ -126,10 +132,10 @@
         </div>
      </form>
       
-      <div class="sideNav" id="sideNav" style="z-index: 999;">
+      <div class="sideNav" id="sideNav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="{{url_for('frontpage')}}">Home</a>
-        <a style="right: 180px; color: #289cd1;" href="{{url_for('pantry')}}">Pantry</a>
+        <a style="right: 180px;" href="{{url_for('pantry')}}">Pantry</a>
         <a href="{{url_for('explore')}}">Explore</a>
         <a href="{{url_for('findRecipes')}}">Recipies for You</a>
         <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
