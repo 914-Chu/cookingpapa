@@ -492,6 +492,14 @@ def recipeDetails(recipeId):
 
         # TO DO: 
         #   1. Run mySQL to get pantry ingId's, store into a list
+        cursor = mysql.connection.cursor()
+        query = """SELECT Pantry.ingId
+                    FROM Pantry
+                    WHERE Pantry.userId = {}""".format(session['userId'])
+        cursor.execute(query)
+        result = cursor.fetchall()
+        usersIngredients = [i['ingId'] for i in result]
+
         #   2. Check whether ingredients in recipe match the ingredients in pantry
 
         recipe = list(recipes.aggregate([
@@ -502,7 +510,7 @@ def recipeDetails(recipeId):
         #page, per_page, offset = get_page_args()
         #display = recipes.find({"id":recipedId}, {"_id":0, "name":1, "thumbnail_url":1, "id":1, "sections":1, "description":1, "instructions":1, "tags":1})
 
-        return render_template("recipeDetails.html", recipe=recipe[0])
+        return render_template("recipeDetails.html", recipe=recipe[0], usersIngredients=usersIngredients)
     else:
         return redirect(url_for('login'))
 

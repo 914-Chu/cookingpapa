@@ -67,7 +67,11 @@
                     {% endif %}
                     <ul align="left" style="list-style-type:none; padding-left: 0;">
                         {% for ingredient in recipe['ingredients'][i] %}
-                        <li>{{ingredient['raw_text']}}</li>
+                            {% if ingredient['ingredient']['id'] in usersIngredients %}
+                                <li style="color:green;">{{ingredient['raw_text']}}</li>
+                            {% else %}
+                                <li style="color:#cf0404;">{{ingredient['raw_text']}}</li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                     {% endfor %}
