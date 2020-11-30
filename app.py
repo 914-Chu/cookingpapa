@@ -10,8 +10,8 @@ import json
 import datetime
 from collections import OrderedDict
 
-#client = MongoClient('mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
-client = MongoClient("mongodb://cookingpapaAdmin:cookingpapa@cluster0-shard-00-00.amfe5.mongodb.net:27017,cluster0-shard-00-01.amfe5.mongodb.net:27017,cluster0-shard-00-02.amfe5.mongodb.net:27017/cookingpapa?ssl=true&replicaSet=atlas-mz3djj-shard-0&authSource=admin&retryWrites=true&w=majority")
+client = MongoClient('mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
+#client = MongoClient("mongodb://cookingpapaAdmin:cookingpapa@cluster0-shard-00-00.amfe5.mongodb.net:27017,cluster0-shard-00-01.amfe5.mongodb.net:27017,cluster0-shard-00-02.amfe5.mongodb.net:27017/cookingpapa?ssl=true&replicaSet=atlas-mz3djj-shard-0&authSource=admin&retryWrites=true&w=majority")
 db = client.cookingpapa
 #serverStatusResult=db.command("serverStatus")
 #print(serverStatusResult)
@@ -215,7 +215,7 @@ def home():
         return redirect(url_for('login'))
 
 
-@app.route("/login/pantry")
+@app.route("/login/pantry", methods=['GET','POST'])
 def pantry():
     if 'loggedin' in session:
         # Below function call to replace line 102-108
@@ -446,33 +446,12 @@ def explore():
         display = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
-        return render_template('explore.html', display=displaypage, pagination=pagination)
-    else:
-        return redirect(url_for('login'))
-
-@app.route("/login/pantry/search", methods=['GET', 'POST'])
-def search():
-    rid = ''
-    if 'loggedin' in session:
-        search = False
-        q = request.args.get('q')
-        if q:
-            search = True
-
-        page, per_page, offset = get_page_args()
-        cond = re.compile(r'recipe', re.I)
-        recipeList = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-        #print(request.form['recipe'])
+        
         if request.method == 'POST' and 'recipe' in request.form:
              rid = recipes.find_one({"name":request.form['recipe']}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
-             #print(rid)
              if rid:
-                 #print(rid)
-                 #print(type(rid["id"]))
                  return redirect(url_for('recipeDetails', recipeId=rid['id']))
-        #displaypage = recipes.find({"canonical_id":{'$regex': cond}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
-        #pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
-        return render_template('search.html', recipeList=recipeList)
+        return render_template('explore.html', display=displaypage, pagination=pagination, recipeList=display)
     else:
         return redirect(url_for('login'))
 
