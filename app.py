@@ -50,8 +50,10 @@ def findRecipes():
                 WHERE Pantry.userId = {}""".format(session['userId'])
     cursor.execute(query)
     result = cursor.fetchall()
+    cond = re.compile(r'recipe', re.I)
     usersIngredients = [i['ingId'] for i in result]     #list of ingredient ids that the user has
     canCookRecipes = db.recipes.aggregate([
+        {"$match":{"canonical_id": {"$regex": cond}}},
         {"$unwind": "$sections"},
         {"$unwind": "$sections.components"},
         {"$group": {"_id": "$_id", "id":{"$first":"$id"}, "name":{"$first":"$name"},"thumbnail_url":{"$first":"$thumbnail_url"}, "countMatch": {"$sum": {"$cond":[{"$in": ["$sections.components.ingredient.id", usersIngredients]},1,0]}},"countTotal": {"$sum": 1}}},
@@ -113,7 +115,8 @@ def findRecipesPreferences():
             if tag in tagList:
                 userProfile[tagDict[tag]] -= 1
 
-    allRecipes = list(db.recipes.find({"$and":[{"id":{"$nin": usersFavorites}},{"id":{"$nin": usersDislikes}}]},{"_id":0, "id":1, "tags":1}))
+    cond = re.compile(r'recipe', re.I)
+    allRecipes = list(db.recipes.find({"$and":[{"canonical_id":{"$regex":cond}},{"id":{"$nin": usersFavorites}},{"id":{"$nin": usersDislikes}}]},{"_id":0, "id":1, "tags":1}))
 
     recipeScores = {}                          #key: recipe id, value:score
     for item in allRecipes:
