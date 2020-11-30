@@ -10,8 +10,8 @@ import json
 import datetime
 from collections import OrderedDict
 
-#client = MongoClient('mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
-client = MongoClient("mongodb://cookingpapaAdmin:cookingpapa@cluster0-shard-00-00.amfe5.mongodb.net:27017,cluster0-shard-00-01.amfe5.mongodb.net:27017,cluster0-shard-00-02.amfe5.mongodb.net:27017/cookingpapa?ssl=true&replicaSet=atlas-mz3djj-shard-0&authSource=admin&retryWrites=true&w=majority")
+client = MongoClient('mongodb+srv://cookingpapaAdmin:cookingpapa@cluster0.amfe5.mongodb.net/cookingpapa?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE')
+#client = MongoClient("mongodb://cookingpapaAdmin:cookingpapa@cluster0-shard-00-00.amfe5.mongodb.net:27017,cluster0-shard-00-01.amfe5.mongodb.net:27017,cluster0-shard-00-02.amfe5.mongodb.net:27017/cookingpapa?ssl=true&replicaSet=atlas-mz3djj-shard-0&authSource=admin&retryWrites=true&w=majority")
 db = client.cookingpapa
 #serverStatusResult=db.command("serverStatus")
 #print(serverStatusResult)
