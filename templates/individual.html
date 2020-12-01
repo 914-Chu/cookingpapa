@@ -71,16 +71,17 @@
       margin-left: 50px;
     }
   
-    .button {
+    .updateDelete {
       border-radius: 5px;
       background-color:transparent;
       border: none;
       color: #463F3a;
       padding: 5px;
-
+      text-decoration: none;
     }
-    .button:hover {
+    .updateDelete:hover {
       color: white;
+      text-decoration: none;
     }
 
   </style>
@@ -94,7 +95,7 @@
       <h2 style="font-weight: bold;">PANTRY</h2>
       <h3>User Name: {{userName}}</h3>
       <div class ="url">
-        <a style="left:42%; top: 7%;" href="{{url_for('pantryadd')}}">Add</a>
+        <a style="left:42%; top: 7%;" href="{{url_for('pantry')}}">Pantry</a>
         <a style="left: 47%; top: 7%;" href="{{url_for('checkDate')}}">Check Expiry</a>
       </div>
       <form method="post">
@@ -120,8 +121,8 @@
                   <td>{{item['qty']}}</td>
                   <td>{{item['pdate']}}</td>
                   <td>{{item['edate']}}</td>
-                  <td><a href="{{url_for('updatePantry', item=item)}}"><button class="button">Update</button></a></td>
-                  <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure you want to delete this item?')"><button class="button">Delete</button></a></td>
+                  <td><a class="updateDelete" href="{{url_for('updatePantry', item=item)}}">Update</a></td>
+                  <td><a class="updateDelete" href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a></td>
                   <!-- <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
                   <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button class="button">Delete</button></a></td> -->
                 </tr>

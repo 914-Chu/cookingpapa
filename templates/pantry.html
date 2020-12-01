@@ -71,16 +71,17 @@
       margin-left: 50px;
     }
   
-    .button {
+    .itemName {
       border-radius: 5px;
       background-color:transparent;
       border: none;
       color: #463F3a;
       padding: 5px;
-
+      text-decoration: none;
     }
-    .button:hover {
+    .itemName:hover {
       color: white;
+      text-decoration: none;
     }
 
   </style>
@@ -113,7 +114,7 @@
               <tbody>
                 {% for item in output %}
                 <tr>
-                  <td><a href="{{url_for('individual', ingId=item['ingId'])}}"><button class="button">{{item['name']}}</button></a></td>
+                  <td><a class="itemName" href="{{url_for('individual', ingId=item['ingId'])}}">{{item['name']}}</a></td>
                   <td>{{item['unit']}}</td>
                   <td>{{item['qty']}}</td>
                   <!-- <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>

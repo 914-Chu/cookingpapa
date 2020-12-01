@@ -69,7 +69,15 @@
       background-color: #463F3a;
       color: white;
       padding: 5px;
-
+    }
+    td,tr .itemName:hover {
+      color: #289cd1;
+      text-decoration: none;
+    }.itemName {
+      font-weight: bold;
+      color: #463F3a;
+      padding: 5px;
+      text-decoration: none;
     }
   </style>
   <body>
@@ -136,8 +144,8 @@
                 {% for item in display %}
                 <tr>
                   <td>
-                    <a
-                      style="font-weight: bold; color: #463f3a"
+                    <a class="itemName"
+                    
                       href="{{url_for('recipeDetails', recipeId=item.id)}}"
                       >{{item.name}}</a
                     >
@@ -150,8 +158,7 @@
                     />
                   </td>
                   <td>
-                    <a
-                      style="font-weight: bold; color: #463f3a"
+                    <a class="itemName"
                       href="{{url_for('deletefavorite', recipeId=item.id)}}"
                       >Delete</a
                     >
