@@ -64,17 +64,19 @@
       font-size: 36px;
       margin-left: 50px;
     }
-    td,
-    tr a:hover {
+    td,tr a:hover {
       color: #289cd1;
     }
+    .search {
+      border:none;
+      border-radius: 5px;
+      background-color: #463F3a;
+      color: white;
+      padding: 5px;
 
-    /*
-    .pagination-page-info b{
-      color:black;
-      background:#db9d47;
-      
-    }*/
+    }
+
+    
   </style>
   <body>
     <div class="header">
@@ -100,22 +102,23 @@
       <h1 style="font-weight: bold">Explore New Recipes</h1>
       
       <form method="post">
-        <input
-          type="text"
-          name="recipe"
-          id="recipe"
-          list="recipeList"
-          autocomplete="off"
-          required
-        />
-        <datalist id="recipeList">
-          {% for item in recipeList %}
-          <option data-value="{{ item.name }}" style="background: beige">
-            {{ item.name }}
-          </option>
-          {% endfor %}
-        </datalist>
-        <input type="submit" value="Search" />
+       
+          <input
+            type="text"
+            name="recipe"
+            id="recipe"
+            list="recipeList"
+            required
+          />
+          <datalist id="recipeList">
+            {% for item in recipeList %}
+            <option data-value="{{ item.name }}" style="background: beige">
+              {{ item.name }}
+            </option>
+            {% endfor %}
+          </datalist>
+          <input class="search" type="submit" value="Search" />
+      
       </form>
       <form method="post">
         <div class="container pt-4">

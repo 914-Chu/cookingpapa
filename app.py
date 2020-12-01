@@ -576,14 +576,14 @@ def addDislike(recipeId):
         output = cursor.fetchall()
         if len(output) != 0:
             msg = "Recipe already added"
-            return redirect(url_for('findRecipes', msg=msg))
+            return redirect(url_for('explore', msg=msg))
         else:
             query = """INSERT INTO Dislikes (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
             cursor.execute(query)
             mysql.connection.commit()
             msg = "Add success"
-            return redirect(url_for('findRecipes', msg=msg))
+            return redirect(url_for('explore', msg=msg))
     else:
         return redirect(url_for('login'))
 

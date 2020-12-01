@@ -113,7 +113,7 @@
               <tbody>
                 {% for item in output %}
                 <tr>
-                  <td><a href="{{url_for('individual', ingId=item['ingId'])}}">{{item['name']}}</a></td>
+                  <td><a href="{{url_for('individual', ingId=item['ingId'])}}"><button class="button">{{item['name']}}</button></a></td>
                   <td>{{item['unit']}}</td>
                   <td>{{item['qty']}}</td>
                   <!-- <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
@@ -131,7 +131,7 @@
         <a href="{{url_for('frontpage')}}">Home</a>
         <a style="right: 180px; color: #289cd1;" href="{{url_for('pantry')}}">Pantry</a>
         <a href="{{url_for('explore')}}">Explore</a>
-        <a href="{{url_for('findRecipes')}}">Recipies for You</a>
+        <a href="{{url_for('findRecipes')}}">Recipes for You</a>
         <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
         <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
       </div>
