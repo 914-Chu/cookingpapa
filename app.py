@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, json
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, json, flash, Markup
 #from flask_sqlalchemy import SQLAlchemy
 from flask_mysqldb import MySQL
 from flask_paginate import Pagination, get_page_parameter, get_page_args
@@ -158,7 +158,7 @@ def register():
         if account:
             msg = 'USERNAME EXISTS!'
         elif not re.match(r'^[A-Za-z]+$', userName):
-            msg = 'INVALID USER NAME'
+            msg = Markup('INVALID USER NAME!<br> USER NAME SHOULD ONLY CONTAINS ALPHABETS')
         elif bool(re.search(r"\s", pwd)):
             msg = 'INVALID PASSWORD WITH SPACE'
         else:
@@ -381,7 +381,7 @@ def deletePantry(item):
     itemdict['edate'] = estr.strftime('%Y-%m-%d')
     msg = ''
     pantryId = str(itemdict['pantryId'])
-    print(type(pantryId))
+    #print(type(pantryId))
     if bool(itemdict):
         if request.method == 'GET':
             cursor = mysql.connection.cursor()
@@ -408,7 +408,8 @@ def deletePantry(item):
     else:
         msg = 'NO PANTRYID'
 
-    return render_template("deletePantry.html", msg=msg, item=itemdict)
+    return redirect(url_for('pantry'))
+    #return render_template("deletePantry.html", msg=msg, item=itemdict)
 
 
 @app.route('/login/pantry/checkDate', methods=['GET', 'POST'])
@@ -421,13 +422,13 @@ def checkDate():
 
         cursor = mysql.connection.cursor()
         # EXPIRED IN ? DAYS
-        query = """SELECT Pantry.pantryId AS pantryId, Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.expDate AS edate
+        query = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
                           FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                           WHERE Pantry.userId = {}
                           AND Pantry.expDate <= DATE_ADD(CURDATE(), INTERVAL {} DAY)
                           AND Pantry.expDate >= CURDATE()""".format(session['userId'], expInterval)
         # ALREADY EXPIRED
-        query2 = """SELECT Pantry.pantryId AS pantryId, Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.expDate AS edate
+        query2 = """SELECT Ingredient.name AS name, Pantry.qty AS qty, Pantry.unit AS unit, Pantry.purchDate AS pdate, Pantry.expDate AS edate, Pantry.pantryId AS pantryId
                           FROM Pantry JOIN Ingredient ON Pantry.ingId = Ingredient.ingId
                           WHERE Pantry.userId = {}
                           AND Pantry.expDate <= DATE_ADD(CURDATE(), INTERVAL {} DAY)
@@ -503,7 +504,6 @@ def recipeDetails(recipeId):
 
 @app.route("/pantry/favorite", methods=['GET', 'POST'])
 def favorite():
-    msg=''
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         query = """SELECT recipe_id
@@ -517,7 +517,7 @@ def favorite():
             #res.append(x.get('recipe_id'))
             res.append(s)
         
-        print(res)
+        #print(res)
 
         search = False
         q = request.args.get('q')
@@ -528,13 +528,18 @@ def favorite():
         display = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
         displaypage = recipes.find({"canonical_id":{'$in':res}}, {"_id":0, "name":1, "thumbnail_url":1, "id":1}).limit(per_page).skip(offset)
         pagination = Pagination(page=page, total=display.count(), search=search, record_name='display', per_page=per_page, offset=offset, css_framework='bootstrap4')
-        return render_template('favorite.html', display=displaypage, pagination=pagination, msg=msg, userName=session['userName'])
+
+        if request.method == 'POST' and 'recipe' in request.form:
+             rid = recipes.find_one({"name":request.form['recipe']}, {"_id":0, "name":1, "thumbnail_url":1, "id":1})
+             if rid:
+                 return redirect(url_for('recipeDetails', recipeId=rid['id']))
+
+        return render_template('favorite.html', display=displaypage, pagination=pagination, userName=session['userName'], recipeList=display)
     else:
         return redirect(url_for('login'))
 
 @app.route("/pantry/addfavorite/<string:recipeId>", methods=['GET', 'POST'])
 def addfavorite(recipeId):
-    msg = ""
     if 'loggedin' in session:
         cursor = mysql.connection.cursor()
         # query = "ALTER TABLE userAccount AUTO_INCREMENT = {}".format(lastId)
@@ -545,15 +550,15 @@ def addfavorite(recipeId):
         cursor.execute(query)
         output = cursor.fetchall()
         if len(output) != 0:
-            msg = "Recipe already added"
-            return redirect(url_for('explore', msg=msg))
+            flash("Recipe already added")
+            return redirect(url_for('favorite'))
         else:
             query = """INSERT INTO Favorites (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
             cursor.execute(query)
             mysql.connection.commit()
-            msg = "Add success"
-            return redirect(url_for('favorite', msg=msg))
+            flash("Favorite Added success")
+            return redirect(url_for('favorite'))
     else:
         return redirect(url_for('login'))
 
