@@ -253,7 +253,7 @@ def individual(ingId):
         cursor.execute(query)
         output = cursor.fetchall()
 
-        return render_template('individual.html', output=output)
+        return render_template('individual.html', userName=session['userName'], output=output)
     else:
         return redirect(url_for('login'))
 
