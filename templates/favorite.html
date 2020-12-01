@@ -63,6 +63,14 @@
       font-size: 36px;
       margin-left: 50px;
     }
+    .search {
+      border:none;
+      border-radius: 5px;
+      background-color: #463F3a;
+      color: white;
+      padding: 5px;
+
+    }
   </style>
   <body>
     <div class="header">
@@ -111,7 +119,7 @@
           </option>
           {% endfor %}
         </datalist>
-        <input type="submit" value="Search" />
+        <input class="search" type="submit" value="Search" />
       </form>
       <form method="post">
         <div class="container pt-4">
