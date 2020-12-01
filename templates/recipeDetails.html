@@ -19,20 +19,25 @@
             margin: 0;
             padding: 0;
             font-family: helvetica;
-            color: #463f3a;
+            color: #36312d;
         }
         .header a {
             margin-top: 5px;
             margin-left: 5px;  
         }
         .button {
-            color: #463f3a;
-            background-color: transparent;
+            color: white;
+            background-color: #463F3a;
             border-color: transparent;
             font-size: 16px;
             margin-left: 2%;
-            font-weight: bold;
-        }
+             
+            padding: 7px;
+            border-radius: 5px;
+      
+         }
+    
+        
         .button:hover {
             color: #289cd1;
         }
@@ -76,7 +81,7 @@
         <center>
             <div style="text-align: center;" class="container">
                 <h2>{{recipe['name']}}</h2>
-                <a href="{{url_for('addfavorite', recipeId=recipe['id'])}}"><button class="button">Favorite</button></a>
+                <a class= href="{{url_for('addfavorite', recipeId=recipe['id'])}}"><button class="button">Favorite</button></a>
                 <a href="{{url_for('addDislike', recipeId=recipe['id'])}}"><button class="button">Dislike</button></a>
                 {% if recipe['tags']|length %}
                     <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>

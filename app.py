@@ -557,7 +557,7 @@ def addfavorite(recipeId):
                        VALUES ({}, {})""".format(recipeId, session['userId'])
             cursor.execute(query)
             mysql.connection.commit()
-            flash("Favorite Added success")
+            flash("Favorite Added Success!")
             return redirect(url_for('favorite'))
     else:
         return redirect(url_for('login'))

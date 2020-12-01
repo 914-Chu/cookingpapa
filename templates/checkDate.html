@@ -13,7 +13,7 @@
       margin: 0;
       padding: 0;
       font-family: helvetica;
-      color:#36312d;
+      color:#463f3a;
     }
     .header a {
         margin-top: 5px;
@@ -35,6 +35,32 @@
       background-color: #463F3a;
       color: white;
       padding: 5px;
+    }
+    .delete {
+      border-radius: 5px;
+      background-color:transparent;
+      border: none;
+      color: #463F3a;
+      padding: 5px;
+      text-decoration: none;
+    }
+    .delete:hover {
+      color: white;
+      text-decoration: none;
+    }
+    .spacer{
+      display:block;
+      height:15px;
+      width:100%;
+      margin: 0 auto;
+      content:"";
+    }
+    .spacer1{
+      display:block;
+      height:100px;
+      width:100%;
+      margin: 0 auto;
+      content:"";
     }
 
   </style>
@@ -58,6 +84,7 @@
           <label>DAYS</label>
           <input type="submit" value="Check" />
         </form>
+        <div class="spacer"></div>
       <table>
         <thead>
           <tr>
@@ -77,11 +104,12 @@
             <td>{{item['qty']}}</td>
             <td>{{item['unit']}}</td>
             <td>{{item['edate']}}</td>
-            <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
+            <td><a class="delete" href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure you want to delete this item?')">DELETE</a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      <div class="spacer1"></div>
       <h3>EXPIRED</h3>
       <table>
         <thead>
@@ -102,7 +130,7 @@
             <td>{{item['qty']}}</td>
             <td>{{item['unit']}}</td>
             <td>{{item['edate']}}</td>
-            <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')">DELETE</a></td>
+            <td><a class="delete" href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure you want to delete this item?')">DELETE</a></td>
           </tr>
           {% endfor %}
         </tbody>

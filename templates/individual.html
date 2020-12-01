@@ -20,7 +20,7 @@
       margin: 0;
       padding: 0;
       font-family: helvetica;
-      color: #463f3a;
+      color: #36312d;
       /*border-top: 30px solid #ccc; */
 
     }
@@ -29,13 +29,14 @@
         margin-left: 5px; 
     }
     .url a, .url a:visited {
-      float: left;
       text-decoration: none;
-      font-weight: bold;
+      background-color: #463f3a;
+      padding: 7px;
+      border-radius: 5px;
       position: relative;
-      
-      color: #36312d;
+      color: white;
       font-size: 16px;
+      text-align: center;
     }
     .url a:hover, .sideNav:hover {
       color: #289cd1;
@@ -84,6 +85,13 @@
       text-decoration: none;
     }
 
+    .spacer{
+      display:block;
+      height:10px;
+      width:100%;
+      margin: 0 auto;
+      content:"";
+    }
   </style>
   <body>
     <div class = "header">
@@ -95,9 +103,10 @@
       <h2 style="font-weight: bold;">PANTRY</h2>
       <h3>User Name: {{userName}}</h3>
       <div class ="url">
-        <a style="left:42%; top: 7%;" href="{{url_for('pantry')}}">Pantry</a>
-        <a style="left: 47%; top: 7%;" href="{{url_for('checkDate')}}">Check Expiry</a>
+        <a style="top: 7%;" href="{{url_for('pantry')}}">Pantry</a>
+        <a style="top: 7%;" href="{{url_for('checkDate')}}">Check Expiry</a>
       </div>
+      <div class="spacer"></div>
       <form method="post">
         <div class="container pt-4">
           <div class="table-responsive">
