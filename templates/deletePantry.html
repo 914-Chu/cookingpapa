@@ -4,8 +4,42 @@
     <head>
         <meta charset="utf-8">
         <title>CRUD TEST</title>
-    </head>    
+    </head>  
+    <style>
+    body {
+        background-color: #db9d47;
+        margin:0 ;
+        padding:0;
+        font-family: Helvetica;
+        color: #463F3a;
+    }
+
+    .header a {
+        margin-top: 5px;
+        margin-left: 5px;
+    }
+    .url a, .url a:visited {
+      text-decoration: none;
+      font-weight: bold;
+      position: fixed;
+      top: 10px;
+      color: #36312d;
+    }
+    .url a:hover {
+      color: #289cd1;
+    }
+    .Expiry input[type="submit"] {
+      border:none;
+      border-radius: 5px;
+      background-color: #463F3a;
+      color: white;
+      padding: 5px;
+    }
+    </style>  
     <body>
+        <div class = "header">
+            <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
+        </div>
         <center>
         <div class="DELETE">
             <h2>DELETE</h2>
@@ -36,11 +70,11 @@
             </table>
         </div>
         <div class="url">
-            <a href="{{url_for('pantry')}}">PANTRY</a>
-            <a href="{{url_for('logout')}}">LOGOUT</a>
+            <a style="right: 110px;" href="{{url_for('pantry')}}">Pantry</a>
+            <a style="right:30px;" href="{{url_for('logout')}}">Logout</a>
         </div>
         {% if msg %}
-        <div class="msg">{{msg}}</div>
+        <div style="padding: 10px;" class="msg">{{msg}}</div>
         {% endif %}
         </center>
     </body>

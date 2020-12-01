@@ -36,14 +36,45 @@
         .button:hover {
             color: #289cd1;
         }
+        .url {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            text-align: center;
+            z-index: 1;
+            top: 0;
+            right:0;
+            background-color: #463F3a;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+        .url a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+        .url a:hover {
+            color: #289cd1;
+        }
+        .url .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
     </style>
     <body>
-        <div class = "header">
+        <div class= "header">
             <a href = "{{url_for('frontpage')}}"><img src = "https://res.cloudinary.com/cookingpapa/image/upload/v1606153796/images/logo_pxqsex.png" alt=cookingpapalogo style="width: 250px; height: auto;"></a>
           </div>
-        <a href="{{url_for('explore')}}"><button class="button">Back</button></a>
+          <span style="font-size: 28px; cursor:pointer; position:fixed; right: 30px; top: 0;" onclick="openNav()">&#9776;</span
         <center>
-            <div class="container">
+            <div style="text-align: center;" class="container">
                 <h2>{{recipe['name']}}</h2>
                 <a href="{{url_for('addfavorite', recipeId=recipe['id'])}}"><button class="button">Favorite</button></a>
                 <a href="{{url_for('addDislike', recipeId=recipe['id'])}}"><button class="button">Dislike</button></a>
@@ -86,6 +117,24 @@
                     </ol>
                 </div>
             </div>
+            <div class="url" id="sideNav" style="z-index: 999;">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a style="color: #289cd1;" href="{{url_for('frontpage')}}">Home</a>
+                <a style="right: 180px;" href="{{url_for('pantry')}}">Pantry</a>
+                <a href="{{url_for('explore')}}">Explore</a>
+                <a href="{{url_for('findRecipes')}}">Recipes for You</a>
+                <a style="right: 95px;" href="{{url_for('favorite')}}">Favorites</a>
+                <a style="right: 30px;" href="{{url_for('logout')}}">Logout</a>
+            </div>
+            <script>
+                function openNav() {
+                  document.getElementById("sideNav").style.width = "200px";
+                }
+        
+                function closeNav() { 
+                  document.getElementById("sideNav").style.width = "0";
+                }   
+              </script>
         </center>
     </body>
 </html>

@@ -490,7 +490,7 @@ def recipeDetails(recipeId):
         #   2. Check whether ingredients in recipe match the ingredients in pantry
 
         recipe = list(recipes.aggregate([
-        { "$match": {"canonical_id":{'$regex': recipeId}} },
+        { "$match": {"canonical_id":recipeId} },
         { "$project": {"_id":0, "canonical_id":1, "id":1, "name":1, "thumbnail_url":1, "tags":1, "total_time_minutes":1, "description":1, "num_servings":1, 
                         "component":"$sections.name", "ingredients": "$sections.components", "instructions":1} }
         ]))
@@ -571,14 +571,14 @@ def addDislike(recipeId):
         output = cursor.fetchall()
         if len(output) != 0:
             msg = "Recipe already added"
-            return redirect(url_for('findRecipes', msg=msg))
+            return redirect(url_for('explore', msg=msg))
         else:
             query = """INSERT INTO Dislikes (recipe_id, user_id)
                        VALUES ({}, {})""".format(recipeId, session['userId'])
             cursor.execute(query)
             mysql.connection.commit()
             msg = "Add success"
-            return redirect(url_for('findRecipes', msg=msg))
+            return redirect(url_for('explore', msg=msg))
     else:
         return redirect(url_for('login'))
 
