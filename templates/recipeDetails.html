@@ -72,6 +72,11 @@
             font-size: 36px;
             margin-left: 50px;
         }
+        .flashes {
+            list-style-type:none; 
+            font-weight: bold; 
+            color: #2a21a1;
+        }
     </style>
     <body>
         <div class= "header">
@@ -81,7 +86,16 @@
         <center>
             <div style="text-align: center;" class="container">
                 <h2>{{recipe['name']}}</h2>
-                <a class= href="{{url_for('addfavorite', recipeId=recipe['id'])}}"><button class="button">Favorite</button></a>
+                {% with messages = get_flashed_messages() %} 
+                    {% if messages %}
+                        <ul class="flashes">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %} 
+                {% endwith %}
+                <a href="{{url_for('addfavorite', recipeId=recipe['id'])}}"><button class="button">Favorite</button></a>
                 <a href="{{url_for('addDislike', recipeId=recipe['id'])}}"><button class="button">Dislike</button></a>
                 {% if recipe['tags']|length %}
                     <h5>Tagged as: {{ recipe['tags']|join(', ',attribute='display_name') }}</h5>
