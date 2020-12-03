@@ -116,8 +116,8 @@
               <thead>
                 <tr>
                   <th>Ingredient Name</th>
-                  <th>Unit</th>
                   <th>Quantity</th>
+                  <th>Unit</th>
                   <!-- <th>Update</th>
                   <th>Delete</th> -->
                 </tr>
@@ -126,8 +126,9 @@
                 {% for item in output %}
                 <tr>
                   <td><a class="itemName" href="{{url_for('individual', ingId=item['ingId'])}}">{{item['name']}}</a></td>
-                  <td>{{item['unit']}}</td>
                   <td>{{item['qty']}}</td>
+                  <td>{{item['unit']}}</td>
+                  
                   <!-- <td><a href="{{url_for('updatePantry', item=item)}}"><button class=button>Update</button></a></td>
                   <td><a href="{{url_for('deletePantry', item=item)}}" onclick="return confirm('Are you sure for the deletion?')"><button class="button">Delete</button></a></td> -->
                 </tr>
