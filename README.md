@@ -2,6 +2,8 @@
 # CS411-cookingpapa
 
 <p>Hello daddies! Welcome to CookingPapa with Joyce, Ardel, Nina, and Kamil; A.K.A JANK. If you want to run this application locally we are using VS Code so follow these steps:</p>
+
+## This Website is terminated, please visit following wiki page for project details.
 <a href="https://wiki.illinois.edu/wiki/display/CS411AAFA20/JANK">Project Details</a>
 
 ## Prerequisites
